@@ -81,6 +81,27 @@ button.toggle{font-size:12.5px;font-weight:500;padding:5px 12px;border-color:var
 button.toggle[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 button.toggle:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
 .check span{font-family:var(--body);font-weight:400}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px;align-items:center}
+button.tab{font-size:13.5px;font-weight:500;padding:8px 16px;border-color:var(--line);color:var(--ink2);max-width:100%;text-align:left}
+button.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.tabs .add{font-size:13px}
+.modelhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:18px 0 4px}
+details.stage{border-top:1px solid var(--line);padding-top:6px;margin:14px 0}
+details.stage>summary{font-size:15px;padding:10px 0;list-style-position:outside}
+.question{margin:18px 0 26px}
+.qhead{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
+.qbox{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.qtext{font-family:var(--disp);font-weight:600;font-size:15.5px;line-height:1.5}
+.answer{margin:10px 0 14px}
+.answerctl{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:8px}
+.answerctl select{width:auto;font-size:13.5px;padding:6px 10px}
+.check.inline{margin:0;font-size:13.5px}
+.shared{font-family:var(--disp);font-size:12.5px;color:var(--blue)}
+button.linkbtn{border:none;background:none;padding:0;font-size:13px;font-weight:500;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+button.linkbtn:hover{background:none;color:var(--ink)}
+.x.small{width:28px;height:28px;font-size:15px;margin-left:auto}
+.field.topic{margin:-6px 0 26px;padding:14px 16px;border-radius:10px;background:var(--field)}
+textarea:disabled{opacity:.45}
 .warn{font-family:var(--disp);font-size:13.5px;color:var(--accent);margin:4px 0}
 .okmsg{font-family:var(--disp);font-size:13.5px;color:var(--ok);margin:4px 0}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:12px 0;line-height:1.6}
@@ -143,32 +164,30 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <h2><span class="n">01</span>Where your idea started</h2>
   <p class="lede">Where your idea started affects which of its assumptions are riskiest.</p>
   <div class="field"><label for="idea">Your idea in one sentence</label>
-    <textarea id="idea" data-bind="idea" placeholder="A low-cost sensor that reads invoice paper and matches it to deliveries."></textarea></div>
+    <textarea id="idea" data-bind="idea" placeholder="A low-cost scanner that reads paper invoices and matches them to deliveries."></textarea></div>
   <span class="lbl">It started with...</span>
   <div class="radios" id="start">
     <label><input type="radio" name="start" value="tech"><span><b>A platform technology.</b> We have something that could be used in many ways and are looking for who needs it.</span></label>
     <label><input type="radio" name="start" value="product"><span><b>A product.</b> We've designed, or are building, one specific product.</span></label>
     <label><input type="radio" name="start" value="problem"><span><b>A problem.</b> We think we've found a problem worth solving.</span></label>
   </div>
-  <div class="note" id="biasnote" hidden><b>Watch for the Innovator's Bias.</b> When you start from a technology or product, it's easy to describe problems that justify building it. "When you've already decided to build a hammer, everything looks like a nail" (Ash Maurya). Listing several market opportunities below is one check on this bias.</div>
-
-  <h3>Your market opportunities</h3>
-  <p class="hint">A market opportunity is one application for one group of customers. The same product sold to different customers counts as different opportunities: an invoice scanner for coffee shop owners is one; the same scanner for restaurant kitchen managers is another.</p>
-  <p class="hint" id="wtpHint" hidden>With a platform technology, finding opportunities is its own step. Use <a href="https://app.wheretoplay.co/" target="_blank" rel="noopener">Where to Play</a> (Marc Gruber and Sharon Tal; free online tool and worksheets) to find and compare them.</p>
-  <p class="hint">Enter your main opportunity first, then any others you're keeping open.</p>
-  <p class="hint">The tool uses this list to judge what happens when an assumption turns out false. A backup opportunity helps only if it doesn't depend on the failed assumption; Where to Play defines backups the same way.</p>
-  <div id="apps"></div>
-  <button class="add" type="button" id="addApp">+ Add an opportunity</button>
+  <div class="note" id="biasnote" hidden><b>Watch for the Innovator's Bias.</b> When you start from a technology or product, it's easy to describe problems that justify building it. "When you've already decided to build a hammer, everything looks like a nail" (Ash Maurya). Writing out more than one business model in step 02 is one check on this bias.</div>
+  <p class="hint" id="wtpHint" hidden>With a platform technology, finding who needs it is its own step. Use <a href="https://app.wheretoplay.co/" target="_blank" rel="noopener">Where to Play</a> (Marc Gruber and Sharon Tal; free online tool and worksheets) to find and compare options. Where to Play calls these market opportunities; each one becomes a business model in step 02.</p>
 </section>
 
 <!-- 2. Assumptions -->
 <section class="card" id="s2">
   <h2><span class="n">02</span>List your assumptions</h2>
-  <p class="lede">An assumption is anything your business needs to be true. List them all, even the ones you feel sure about; each one gets an evidence rating below. Go box by box. Write fast; you can fix wording later.</p>
-  <p class="hint">Rate each assumption honestly. <b>Leap of faith:</b> gut instinct. <b>Anecdote:</b> you heard it from a few people or saw it once. <b>Fact:</b> you have data from real behavior. Gut instinct is fine; just label it.</p>
-  <div id="assumptions"></div>
-  <button class="add" type="button" id="addAssumption">+ Add an assumption</button>
-  <p class="hint" style="margin-top:12px">Sentence starters adapted from David J. Bland's Assumptions Mapping Worksheet (Precoil), which adapts questions from Giff Constable, and from the attractiveness criteria in Gruber and Tal's Where to Play worksheets (CC BY-NC-SA 4.0).</p>
+  <p class="lede">An assumption is anything your business needs to be true. Answer the questions below; each answer is an assumption. List them all, even the ones you feel sure about. Write fast; you can fix wording later.</p>
+  <p class="hint">Rate each answer honestly. <b>Leap of faith:</b> gut instinct. <b>Anecdote:</b> you heard it from a few people or saw it once. <b>Fact:</b> you have data from real behavior. Gut instinct is fine; just label it. If you don't know an answer yet, say so: unknowns are the riskiest assumptions of all.</p>
+
+  <div id="techSection"></div>
+
+  <h3>Your business models</h3>
+  <p class="hint">A business model is your full set of answers for one customer with one problem. If you change the customer or the problem, most of the other answers change too, so that's a new business model. If only a later answer changes, such as a different price or channel, add a second answer to that question instead.</p>
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div id="model"></div>
+  <p class="hint" style="margin-top:18px">Questions combine the Lean Canvas (Ash Maurya) and the Business Model Canvas (Alexander Osterwalder), with rules and approvals from David J. Bland's Assumptions Mapping Worksheet (Precoil).</p>
 </section>
 
 <!-- 3. Order -->
@@ -176,7 +195,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <h2><span class="n">03</span>Your testing order</h2>
   <p class="lede">Calculated from your answers, not from how important things feel.</p>
   <details><summary>How the order is calculated</summary>
-    <p class="hint"><b>Consequence.</b> If a technology assumption fails, every opportunity fails: <b>Stop</b>. If a customer or problem assumption fails, the tool checks your other opportunities. If at least one doesn't depend on it: <b>Pivot</b>. If all of them do: <b>Stop</b>. Money assumptions (price, channels, costs) are judged with a money model in stage 2.</p>
+    <p class="hint"><b>Consequence.</b> If a technology assumption fails, every business model fails: <b>Stop</b>. If a customer or problem assumption fails, the tool checks your other business models. If at least one doesn't depend on it: <b>Pivot</b>. If all of them do: <b>Stop</b>. Money assumptions (price, channels, costs) are judged with a money model in stage 2.</p>
     <p class="hint"><b>Reach.</b> How many of your other assumptions depend on this one. On the canvas, later boxes depend on earlier ones: problems belong to a customer, prices depend on the problem, channels depend on who the customer is.</p>
     <p class="hint"><b>Evidence.</b> Leap-of-faith assumptions go before anecdotes; facts go last.</p>
     <p class="hint"><b>Earlier links first.</b> If an earlier assumption is still a leap of faith, a "no" on a later assumption could mean only that the earlier assumption was wrong, so the later assumption waits. Customer and problem assumptions are tested together, and technology tests run alongside interviews.</p>
@@ -198,7 +217,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <h2><span class="n">05</span>Plan an interview</h2>
   <p class="lede">Pick who you're talking to and which hypotheses this conversation tests. One interview can test several.</p>
   <div class="row">
-    <div class="field"><label for="planApp">Opportunity</label><select id="planApp"></select></div>
+    <div class="field"><label for="planApp">Business model</label><select id="planApp"></select></div>
     <div class="field"><label for="planRole">Their role</label><select id="planRole"></select></div>
   </div>
   <p class="hint" id="roleHint"></p>
@@ -241,31 +260,29 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 const KEY='leap-to-evidence-v1';
 
 /* Lean Canvas boxes in chain order. gate: a yes/no condition judged in stage 1. */
+/* Questions from the Lean Canvas and the Business Model Canvas, one per box, in dependency order.
+   stage: when the question opens. order: what depends on what. gate: a yes/no condition judged in stage 1. */
 const BOXES=[
-  {id:'tech',name:'Technology or product',order:0,gate:true,all:true,
-   starters:['our technology can reliably ___','our technology works outside the lab when ___','our product does ___ safely and reliably','we can make the product for about ___ each']},
-  {id:'segment',name:'Customer segment',order:1,gate:true,
-   starters:['the people who have this problem most are ___','we can find and reach these people at ___','this market is big enough because ___ (size and growth)']},
-  {id:'problem',name:'Problem',order:1,gate:true,
-   starters:['these customers struggle with ___','this problem costs them ___ (time, money, risk)','it happens when ___','this is an unmet need because ___']},
-  {id:'alternatives',name:'Existing alternatives',order:2,
-   starters:['customers can or cannot solve this problem by ___','what they use now falls short because ___']},
-  {id:'uvp',name:'Unique value proposition',order:3,
-   starters:['our value proposition to these customers is ___','they would switch from what they use now because ___','our solution is better than current solutions because ___']},
-  {id:'solution',name:'Solution',order:4,
-   starters:['the smallest thing that solves this is ___']},
-  {id:'channels',name:'Channels',order:5,
-   starters:['we can reach our customers through ___','we can keep our customers by ___','the sales cycle takes about ___']},
-  {id:'revenue',name:'Revenue',order:6,
-   starters:['we can generate revenue by ___','customers will pay a high enough price because ___','customers are able to pay ___']},
-  {id:'costs',name:'Cost structure',order:7,
-   starters:['we can keep our costs low by ___','we can make a profit because ___']},
-  {id:'metrics',name:'Key metrics',order:8,
-   starters:['we will know it is working when ___']},
-  {id:'advantage',name:'Unfair advantage',order:8,
-   starters:['we are uniquely positioned to win because ___','others cannot easily copy this because ___','competitors are unlikely to ___']}
+  {id:'tech',stage:0,name:'Technology or product',order:0,gate:true,all:true,q:'What must your technology or product do reliably for customers to use it?',ph:'Read crumpled, handwritten supplier invoices correctly'},
+  {id:'segment',stage:1,name:'Customer',order:1,gate:true,q:'Who exactly has this problem?',ph:'Owners of independent coffee shops with 1 to 3 locations'},
+  {id:'problem',stage:1,name:'Problem',order:1,gate:true,q:'What problem do they have?',ph:'Matching supplier invoices to deliveries by hand takes hours'},
+  {id:'alternatives',stage:1,name:'Existing alternatives',order:2,q:'What do they do about the problem today?',ph:'Paper files, a spreadsheet, or their bookkeeper'},
+  {id:'uvp',stage:1,name:'Value proposition',order:3,q:'Why would they choose you over what they do now?',ph:'It does the matching in seconds with no typing'},
+  {id:'solution',stage:2,name:'Solution',order:4,q:"What's the simplest version that would solve the problem?",ph:'A phone app that photographs the invoice and the delivery slip'},
+  {id:'channels',stage:2,name:'Channels',order:5,q:'How will you reach them?',ph:'Through the suppliers who already deliver to them'},
+  {id:'relationships',stage:2,name:'Customer relationships',order:5,q:'How will you keep customers coming back?',ph:'A weekly summary of mismatches and money saved'},
+  {id:'revenue',stage:2,name:'Revenue',order:6,q:'How will you make money from them?',ph:'A monthly subscription of about $30'},
+  {id:'costs',stage:2,name:'Costs',order:7,q:'What will it cost to make, deliver and sell your product?',ph:'App hosting, card fees, and about $40 to win each customer'},
+  {id:'rules',stage:2,name:'Rules and approvals',order:4,q:'What laws, approvals or certifications apply to your product?',ph:'Rules on storing financial records'},
+  {id:'partners',stage:3,name:'Key partners',order:7,q:'Who must you work with to make or deliver your product?',ph:'Food suppliers willing to share delivery data'},
+  {id:'activities',stage:3,name:'Key activities',order:7,q:'What must your team do well?',ph:'Train the reading software on messy handwriting'},
+  {id:'resources',stage:3,name:'Key resources',order:7,q:"What must you have that's hard to get, such as people, data, equipment or permits?",ph:'Thousands of real invoices to train on'},
+  {id:'metrics',stage:3,name:'Key metrics',order:8,q:"What number will tell you it's working?",ph:'Invoices matched per shop per week'},
+  {id:'advantage',stage:3,name:'Unfair advantage',order:8,q:"Why can't others easily copy you?",ph:'Our supplier data partnerships'}
 ];
 const BOX=Object.fromEntries(BOXES.map(b=>[b.id,b]));
+const STAGES={1:'Stage 1: customer and problem',2:'Stage 2: solution and money',3:'Stage 3: running and defending the business'};
+const STAGE_HINT={1:'Start here. Everything else depends on these answers.',2:'Open this stage once your stage 1 answers have some support.',3:'Open this stage once your stage 2 answers have some support.'};
 const EVID={leap:{label:'Leap of faith',w:3},anecdote:{label:'Anecdote',w:2},fact:{label:'Fact',w:1}};
 const STATUS={now:'Test now',later:"Can't test yet",supported:'Supported enough to decide',refuted:'Refuted'};
 const ROLES={
@@ -276,132 +293,183 @@ const ROLES={
   gatekeeper:{name:'Gatekeeper or regulator',hint:'Someone who can block or slow adoption. Best for: rules, approvals and deal-breakers, not the problem itself.'},
   advisor:{name:'Advisor or coach (talk to first)',hint:'Best for: checking which of your assumptions are riskiest before you interview customers.'}
 };
-/* Boxes an interview cannot settle in stage 1. */
+/* Boxes an interview cannot settle. */
 const NOT_BY_INTERVIEW={tech:'Whether the technology or product works is settled by a technical test, not an interview.',
   costs:'Costs are settled with supplier quotes and desk research.',
+  rules:'Rules and approvals are settled with desk research and expert advice.',
+  activities:'Key activities are settled by building and running a small version of the business.',
+  resources:'Key resources are settled by trying to get them: quotes, offers, signed agreements.',
   metrics:'Metrics are settled once you have users.',
   advantage:'Advantage is settled by competitor research and, later, by what others fail to copy.'};
 
-function blank(){return {idea:'',start:'',apps:[newApp()],assumptions:[],plan:{app:'',role:'user',cards:[]},stopN:12,stopK:3};}
+function uid(){return Math.random().toString(36).slice(2,9);}
+function newApp(){return {id:uid(),topic:''};}
+function newAssumption(){return {id:uid(),apps:[],box:'segment',text:'',unknown:false,evidence:'leap',status:'now',trigger:'',
+  h:{who:'',behavior:'',measure:'',context:'',sentence:'',falseIf:'',crux:false}};}
+function blank(){const m=newApp();return {idea:'',start:'',apps:[m],active:m.id,assumptions:[],plan:{app:'',role:'user',cards:[]},stopN:12,stopK:3};}
 /* A fictional venture so people can see a finished example. */
 function example(){
-  const A={id:'exA',who:'Owners of independent coffee shops with 1 to 3 locations',problem:'Matching supplier invoices to deliveries by hand',now:'Paper files, a spreadsheet, their bookkeeper',topic:'paying your suppliers'};
-  const B={id:'exB',who:'Kitchen managers at small restaurants',problem:'Catching short or wrong deliveries before the driver leaves',now:'Checking boxes against a printed order',topic:'receiving deliveries'};
+  const A={id:'exA',topic:'paying suppliers'},B={id:'exB',topic:'receiving deliveries'};
   const mk=(id,app,box,text,evidence,h)=>Object.assign(newAssumption(),{id,apps:Array.isArray(app)?app:(app?[app]:[]),box,text,evidence,h:Object.assign(newAssumption().h,h||{})});
-  return {idea:'A low-cost scanner that reads paper invoices and matches them to deliveries.',start:'tech',apps:[A,B],
+  return {idea:'A low-cost scanner that reads paper invoices and matches them to deliveries.',start:'tech',apps:[A,B],active:'exA',
     assumptions:[
-      mk('e1','','tech','our technology can reliably read crumpled, handwritten supplier invoices','anecdote'),
-      mk('e2','exA','problem','these customers struggle with matching invoices to deliveries every week','leap',
+      mk('e1','','tech','It reads crumpled, handwritten supplier invoices correctly','anecdote'),
+      mk('e8','exA','segment','Owners of independent coffee shops with 1 to 3 locations','anecdote'),
+      mk('e2','exA','problem','Matching supplier invoices to deliveries by hand takes them hours every week','leap',
         {who:'Owners of independent coffee shops with 1 to 3 locations',behavior:'matched a supplier invoice to a delivery',measure:'2 or more hours a week',context:'usually at the end of the week',
          sentence:'Owners of independent coffee shops with 1 to 3 locations spend 2 or more hours a week matching supplier invoices to deliveries by hand.',
          falseIf:'Someone else does it for them, or it takes a few minutes.',crux:true}),
-      mk('e3','exA','segment','the owners themselves do this work, not a bookkeeper','leap',
-        {who:'Owners of independent coffee shops with 1 to 3 locations',behavior:'dealt with a supplier invoice',measure:'the owner personally handles most invoices',context:'',
+      mk('e3','exA','segment','The owners do this work themselves, not a bookkeeper','leap',
+        {who:'Owners of independent coffee shops with 1 to 3 locations',behavior:'dealt with a supplier invoice',measure:'the owner personally handles most invoices',
          sentence:'In most of these shops, the owner personally handles supplier invoices.',falseIf:'A bookkeeper or manager handles them.',crux:true}),
-      mk('e4','exA','revenue','customers will pay a high enough price because mistakes cost them real money','leap'),
-      mk('e5','exA','channels','we can reach our customers through local supplier networks','leap'),
-      mk('e6','exB','problem','kitchen managers miss short deliveries often enough to lose money','leap'),
-      mk('e7',['exA','exB'],'segment','small food businesses still get most supplier invoices on paper','anecdote')],
+      mk('e9','exA','alternatives','Paper files, a spreadsheet, or their bookkeeper','anecdote'),
+      mk('e10','exA','uvp','It does the matching in seconds with no typing','leap'),
+      mk('e9b','exB','segment','Kitchen managers at small restaurants','anecdote'),
+      mk('e6','exB','problem','Short or wrong deliveries get missed until the driver has left','leap'),
+      mk('e7',['exA','exB'],'segment','Small food businesses still get most supplier invoices on paper','anecdote'),
+      mk('e5',['exA','exB'],'channels','Through the suppliers who already deliver to them','leap'),
+      mk('e4','exA','revenue','A monthly subscription of about $30','leap')],
     plan:{app:'exA',role:'user',cards:['e2','e3']},stopN:12,stopK:3};
 }
-function uid(){return Math.random().toString(36).slice(2,9);}
-function newApp(){return {id:uid(),who:'',problem:'',now:'',topic:''};}
-function newAssumption(){return {id:uid(),apps:[],box:'segment',text:'',evidence:'leap',status:'now',trigger:'',
-  h:{who:'',behavior:'',measure:'',context:'',sentence:'',falseIf:'',crux:false}};}
 
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){S=null;}
 if(!S||!Array.isArray(S.apps))S=blank();
-function migrate(st){(st.assumptions||[]).forEach(a=>{if(!Array.isArray(a.apps)){a.apps=a.app?[a.app]:[];}delete a.app;});return st;}
+/* Older saves kept customer and problem on the opportunity itself; turn those into answers. */
+function migrate(st){
+  (st.assumptions||[]).forEach(a=>{if(!Array.isArray(a.apps)){a.apps=a.app?[a.app]:[];}delete a.app;if(!BOX[a.box])a.box='segment';});
+  (st.apps||[]).forEach(m=>{[['who','segment'],['problem','problem'],['now','alternatives']].forEach(([k,box])=>{
+    if(m[k]&&m[k].trim()&&!st.assumptions.some(a=>a.box===box&&a.apps.includes(m.id))){const a=newAssumption();a.box=box;a.text=m[k];a.apps=[m.id];st.assumptions.push(a);}
+    delete m[k];});if(m.topic==null)m.topic='';});
+  if(!st.apps.length)st.apps=[newApp()];
+  if(!st.apps.some(m=>m.id===st.active))st.active=st.apps[0].id;
+  return st;}
 migrate(S);
-/* Which opportunities an assumption applies to. Technology applies to all. */
+/* Which business models an assumption applies to. Technology applies to all. */
 function aps(a){return BOX[a.box].all?S.apps.map(x=>x.id):(a.apps||[]);}
+function firstAnswer(m,box){const x=S.assumptions.find(s=>s.box===box&&(s.apps||[]).includes(m.id)&&s.text.trim());return x?x.text.trim():'';}
+/* Customer and problem come from each model's answers; other code reads them as m.who and m.problem. */
+function syncModels(){S.apps.forEach(m=>{m.who=firstAnswer(m,'segment');m.problem=firstAnswer(m,'problem');});}
 function liveApps(){return S.apps.filter(a=>(a.who||'').trim()||(a.problem||'').trim());}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function aText(s){return s.text.trim()||(s.unknown?'Not known yet: '+BOX[s.box].q:'');}
+function save(){syncModels();try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px';}
 function toast(m){const t=$('#toast');t.textContent=m;clearTimeout(toast.t);toast.t=setTimeout(()=>t.textContent='',3000);}
-function appLabel(a,i){const name=(a.who||a.problem)?[a.problem||'(problem)',a.who?'for '+a.who:''].join(' ').trim():'Opportunity '+String.fromCharCode(65+i);return name.length>70?name.slice(0,67)+'...':name;}
-function appShort(a,i){const t=(a.who||a.problem||'').trim();return t?(t.length>40?t.slice(0,38).trim()+'...':t):'Opportunity '+String.fromCharCode(65+i);}
+function cut(t,n){return t.length>n?t.slice(0,n-2).trim()+'...':t;}
+function appLabel(a,i){const w=(a.who||'').trim(),p=(a.problem||'').trim();return (w||p)?cut([w,p].filter(Boolean).join(' · '),70):'Business model '+(i+1);}
+function appShort(a,i){const t=(a.who||a.problem||'').trim();return t?cut(t,40):'Business model '+(i+1);}
 function appIndex(id){return S.apps.findIndex(a=>a.id===id);}
 
-/* ---------- 1. start + applications ---------- */
+/* ---------- 1. start ---------- */
 function renderStart(){
   $('#idea').value=S.idea;
   document.querySelectorAll('#start input').forEach(r=>{r.checked=r.value===S.start;});
   $('#biasnote').hidden=!(S.start==='tech'||S.start==='product');$('#wtpHint').hidden=S.start!=='tech';
-  const box=$('#apps');box.innerHTML='';
-  S.apps.forEach((a,i)=>{
-    const d=document.createElement('div');d.className='item';
-    d.innerHTML=`<div class="itemhead"><span class="tag">${i===0?'PRIMARY OPPORTUNITY':'OTHER OPPORTUNITY '+String.fromCharCode(65+i)}</span>${S.apps.length>1?'<button class="x" type="button" title="Remove">×</button>':''}</div>
-      <div class="row">
-        <div class="field"><label>Customer</label><textarea data-k="who" placeholder="Owners of independent coffee shops with 1 to 3 locations"></textarea></div>
-        <div class="field"><label>Application</label><textarea data-k="problem" placeholder="Matching supplier invoices to deliveries by hand"></textarea></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>What they use now</label><textarea data-k="now" placeholder="Paper files, a spreadsheet, their bookkeeper"></textarea></div>
-        <div class="field"><label>The everyday activity this problem is part of</label><textarea data-k="topic" placeholder="paying suppliers"></textarea></div>
-      </div>
-      <p class="hint" style="margin:4px 0 0">For the everyday activity, name it in the customer's terms, not as your problem. For example, "paying suppliers," not "matching invoices by hand."</p>`;
-    d.querySelectorAll('textarea').forEach(t=>{t.value=a[t.dataset.k];t.addEventListener('input',()=>{a[t.dataset.k]=t.value;grow(t);save();renderComputed();});});
-    const x=d.querySelector('.x');if(x)x.onclick=()=>{S.apps.splice(i,1);S.assumptions.forEach(s=>{s.apps=(s.apps||[]).filter(id=>id!==a.id);});save();renderAll();};
-    box.appendChild(d);
-  });
-  requestAnimationFrame(()=>document.querySelectorAll('#s1 textarea').forEach(grow));
 }
 
-/* ---------- 2. assumptions ---------- */
-function renderAssumptions(){
-  const box=$('#assumptions');box.innerHTML='';
-  if(!S.assumptions.length)box.innerHTML='<p class="hint">No assumptions yet. Start with the customer and the problem, or with your technology if that is where you started.</p>';
-  S.assumptions.forEach((s,i)=>{
-    const b=BOX[s.box];
-    const d=document.createElement('div');d.className='item';
-    d.innerHTML=`<div class="itemhead"><span class="tag">ASSUMPTION ${i+1}</span><button class="x" type="button" title="Remove">×</button></div>
-      <div class="row">
-        <div class="field"><label>Canvas box</label><select data-k="box">${BOXES.filter(x=>x.id!=='tech'||S.start==='tech'||S.start==='product'||s.box==='tech').map(x=>`<option value="${x.id}">${x.name}</option>`).join('')}</select></div>
-        <div class="field"><label>Based on</label><select data-k="evidence">${Object.entries(EVID).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
-      </div>
-      <div class="field"><label>We believe that...</label>
-        <textarea data-k="text" placeholder="Finish the sentence, or pick a starter below"></textarea>
-        <select class="starter"><option value="">Sentence starters</option>${b.starters.map(t=>`<option>${esc(t)}</option>`).join('')}</select></div>
-      <div class="applies"><span class="lbl">Applies to</span>${b.all?'<span class="hint">every opportunity</span>':S.apps.map((a,j)=>`<button type="button" class="toggle" data-app="${a.id}" aria-pressed="${(s.apps||[]).includes(a.id)}">${esc(appShort(a,j))}</button>`).join('')}</div>`;
-    d.querySelectorAll('[data-k]').forEach(el=>{
-      el.value=s[el.dataset.k];
-      const ev=el.tagName==='TEXTAREA'?'input':'change';
-      el.addEventListener(ev,()=>{s[el.dataset.k]=el.value;if(el.tagName==='TEXTAREA')grow(el);
-        if(el.dataset.k==='box'){if(!BOX[s.box].all&&!s.apps.length&&S.apps[0])s.apps=[S.apps[0].id];save();renderAssumptions();renderComputed();return;}
-        save();renderComputed();});
+/* ---------- 2. answers ---------- */
+function answerRow(s,m){
+  const d=document.createElement('div');d.className='answer';
+  const others=aps(s).filter(id=>id!==(m&&m.id)).length;
+  const shareCtl=BOX[s.box].all||S.apps.length<2?'':(others
+    ?`<span class="shared">Shared with ${others} other business model${others>1?'s':''}</span><button type="button" class="linkbtn" data-act="split">Make separate</button>`
+    :`<button type="button" class="linkbtn" data-act="share">Use in all business models</button>`);
+  d.innerHTML=`<textarea data-k="text" placeholder="${esc(BOX[s.box].ph)}"></textarea>
+    <div class="answerctl">
+      <select data-k="evidence" aria-label="Based on">${Object.entries(EVID).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select>
+      <label class="check inline"><input type="checkbox" data-k="unknown"><span>I don't know yet</span></label>
+      ${shareCtl}
+      <button class="x small" type="button" title="Remove this answer">×</button>
+    </div>`;
+  const t=d.querySelector('textarea'),ev=d.querySelector('select'),un=d.querySelector('[data-k=unknown]');
+  t.value=s.text;ev.value=s.evidence;un.checked=!!s.unknown;t.disabled=!!s.unknown;
+  t.addEventListener('input',()=>{s.text=t.value;grow(t);save();renderComputed();});
+  ev.onchange=()=>{s.evidence=ev.value;save();renderComputed();};
+  un.onchange=()=>{s.unknown=un.checked;if(s.unknown){s.text='';s.evidence='leap';}save();renderAnswers();renderComputed();};
+  const act=d.querySelector('[data-act]');
+  if(act)act.onclick=()=>{
+    if(act.dataset.act==='share'){s.apps=S.apps.map(x=>x.id);}
+    else{const c=JSON.parse(JSON.stringify(s));c.id=uid();c.apps=[m.id];s.apps=s.apps.filter(id=>id!==m.id);S.assumptions.push(c);}
+    save();renderAnswers();renderComputed();};
+  d.querySelector('.x').onclick=()=>{
+    if(!BOX[s.box].all&&aps(s).length>1){s.apps=s.apps.filter(id=>id!==m.id);}
+    else{S.assumptions=S.assumptions.filter(x=>x!==s);S.plan.cards=S.plan.cards.filter(id=>id!==s.id);}
+    save();renderAnswers();renderComputed();};
+  return d;
+}
+function questionBlock(b,m){
+  const d=document.createElement('div');d.className='question';
+  d.innerHTML=`<div class="qhead"><span class="qbox">${esc(b.name)}</span><span class="qtext">${esc(b.q)}</span></div><div class="answers"></div>
+    <button class="add" type="button">+ Another answer</button>`;
+  const list=S.assumptions.filter(s=>s.box===b.id&&(b.all||(s.apps||[]).includes(m.id)));
+  if(!list.length){const s=newAssumption();s.box=b.id;s.apps=b.all?[]:[m.id];S.assumptions.push(s);list.push(s);}
+  list.forEach(s=>d.querySelector('.answers').appendChild(answerRow(s,m)));
+  d.querySelector('.add').onclick=()=>{const s=newAssumption();s.box=b.id;s.apps=b.all?[]:[m.id];S.assumptions.push(s);save();renderAnswers();
+    const ts=document.querySelectorAll(`[data-q="${b.id}"] textarea`);if(ts.length)ts[ts.length-1].focus();};
+  d.dataset.q=b.id;
+  return d;
+}
+function renderAnswers(){
+  const showTech=S.start==='tech'||S.start==='product'||S.assumptions.some(s=>s.box==='tech'&&aText(s));
+  const tech=$('#techSection');tech.innerHTML='';
+  if(showTech){tech.innerHTML='<h3>Your technology or product</h3><p class="hint">Every business model depends on these answers.</p>';tech.appendChild(questionBlock(BOX.tech,null));}
+  syncModels();
+  const tabs=$('#tabs');tabs.innerHTML='';
+  S.apps.forEach((m,i)=>{const b=document.createElement('button');b.type='button';b.className='tab';b.setAttribute('role','tab');
+    b.setAttribute('aria-selected',m.id===S.active);b.textContent=appLabel(m,i);b.onclick=()=>{S.active=m.id;save();renderAnswers();};tabs.appendChild(b);});
+  const nb=document.createElement('button');nb.type='button';nb.className='add';nb.textContent='+ New business model (different customer or problem)';
+  nb.onclick=()=>{const cur=S.apps.find(x=>x.id===S.active);const m=newApp();m.topic='';S.apps.push(m);
+    if(cur)S.assumptions.forEach(s=>{if(!BOX[s.box].all&&s.box!=='segment'&&s.box!=='problem'&&(s.apps||[]).includes(cur.id)&&aText(s))s.apps.push(m.id);});
+    S.active=m.id;save();renderAnswers();renderComputed();toast('New business model started. Later answers are shared; change any that differ.');};
+  tabs.appendChild(nb);
+  const m=S.apps.find(x=>x.id===S.active)||S.apps[0];const box=$('#model');box.innerHTML='';
+  const head=document.createElement('div');head.className='modelhead';
+  head.innerHTML=`<span class="tag">BUSINESS MODEL ${appIndex(m.id)+1}</span>${S.apps.length>1?'<button type="button" class="linkbtn" data-act="delmodel">Delete this business model</button>':''}`;
+  box.appendChild(head);
+  const del=head.querySelector('[data-act=delmodel]');
+  if(del)del.onclick=()=>{if(!confirm('Delete this business model and the answers only it uses?'))return;
+    S.apps=S.apps.filter(x=>x.id!==m.id);S.assumptions=S.assumptions.filter(s=>{if(BOX[s.box].all)return true;s.apps=s.apps.filter(id=>id!==m.id);return s.apps.length;});
+    S.active=S.apps[0].id;save();renderAnswers();renderComputed();};
+  [1,2,3].forEach(st=>{
+    const det=document.createElement('details');det.className='stage';
+    const opened=S.openStages||(S.openStages={});if(opened[st]==null)opened[st]=st===1;det.open=opened[st];
+    det.innerHTML=`<summary>${STAGES[st]}</summary><p class="hint">${STAGE_HINT[st]}</p>`;
+    det.addEventListener('toggle',()=>{opened[st]=det.open;save();});
+    BOXES.filter(b=>b.stage===st).forEach(b=>{
+      det.appendChild(questionBlock(b,m));
+      if(b.id==='problem'){const f=document.createElement('div');f.className='field topic';
+        f.innerHTML=`<label>The everyday activity this problem is part of</label><textarea placeholder="paying suppliers"></textarea><p class="hint" style="margin:8px 0 0">Name the activity in the customer's terms, not as your problem. For example, "paying suppliers," not "matching invoices by hand." Interviews open with this activity.</p>`;
+        const t=f.querySelector('textarea');t.value=m.topic||'';t.addEventListener('input',()=>{m.topic=t.value;grow(t);save();renderPlan();});det.appendChild(f);}
     });
-    d.querySelectorAll('[data-app]').forEach(bt=>bt.addEventListener('click',()=>{const on=bt.getAttribute('aria-pressed')!=='true';bt.setAttribute('aria-pressed',on);s.apps=on?[...new Set([...s.apps,bt.dataset.app])]:s.apps.filter(id=>id!==bt.dataset.app);save();renderComputed();}));
-    d.querySelector('.starter').addEventListener('change',e=>{if(!e.target.value)return;const t=d.querySelector('[data-k=text]');t.value=e.target.value;s.text=t.value;grow(t);t.focus();save();renderComputed();});
-    d.querySelector('.x').onclick=()=>{S.assumptions.splice(i,1);S.plan.cards=S.plan.cards.filter(id=>id!==s.id);save();renderAll();};
-    box.appendChild(d);
+    box.appendChild(det);
   });
-  requestAnimationFrame(()=>document.querySelectorAll('#assumptions textarea').forEach(grow));
+  save();
+  requestAnimationFrame(()=>document.querySelectorAll('#s2 textarea').forEach(grow));
 }
 
 /* ---------- 3. scoring ---------- */
 function sameChain(a,b){const B=aps(b);return aps(a).some(x=>B.includes(x));}
 function consequence(s){
   const b=BOX[s.box];
-  if(b.all)return {key:'stop',label:'Stop',why:'Every opportunity depends on the technology or product working.',w:3};
+  if(b.all)return {key:'stop',label:'Stop',why:'Every business model depends on the technology or product working.',w:3};
   if(b.gate){
     const mine=aps(s);
-    if(!mine.length)return {key:'later',label:'Pick an opportunity',why:'In step 02, check the opportunities this assumption applies to.',w:1};
+    if(!mine.length)return {key:'later',label:'Pick a business model',why:'In step 02, check the business models this answer belongs to.',w:1};
     const free=liveApps().filter(a=>!mine.includes(a.id));
-    if(!free.length)return {key:'stop',label:'Stop',why:liveApps().length>1?'Every opportunity you listed depends on this assumption.':"You've listed only one opportunity, so there's nothing to pivot to yet.",w:3};
+    if(!free.length)return {key:'stop',label:'Stop',why:liveApps().length>1?'Every business model you listed depends on this assumption.':"You've listed only one business model, so there's nothing to pivot to yet.",w:3};
     return {key:'pivot',label:'Pivot',why:`Still open if this is false: ${free.map(a=>appShort(a,appIndex(a.id))).join('; ')}.`,w:2};
   }
-  return {key:'later',label:'Judged in stage 2',why:'Money and delivery assumptions are judged with a money model once the customer and problem assumptions have support.',w:1};
+  if(b.stage===1)return {key:'pivot',label:'Pivot',why:'If false, this business model needs a different value proposition for the same customer.',w:2};
+  return {key:'later',label:'Judged later',why:'Money and delivery assumptions are judged with a money model once the customer and problem assumptions have support.',w:1};
 }
-function reach(s){return S.assumptions.filter(o=>o!==s&&sameChain(s,o)&&BOX[o.box].order>BOX[s.box].order).length;}
+function reach(s){return S.assumptions.filter(o=>o!==s&&aText(o)&&sameChain(s,o)&&BOX[o.box].order>BOX[s.box].order).length;}
 function blocker(s){
-  return S.assumptions.find(o=>o!==s&&o.box!=='tech'&&sameChain(s,o)&&BOX[o.box].order<BOX[s.box].order&&o.evidence==='leap'&&o.status!=='supported'&&o.status!=='refuted');
+  return S.assumptions.find(o=>o!==s&&aText(o)&&o.box!=='tech'&&sameChain(s,o)&&BOX[o.box].order<BOX[s.box].order&&o.evidence==='leap'&&o.status!=='supported'&&o.status!=='refuted');
 }
 function ranked(){
-  return S.assumptions.filter(s=>s.text.trim()).map(s=>{
+  return S.assumptions.filter(s=>aText(s)).map(s=>{
     const c=consequence(s),r=reach(s),bl=blocker(s);
     const active=s.status==='now'&&!bl;
     const score=(active?1000:s.status==='now'?500:s.status==='later'?100:0)+c.w*100+EVID[s.evidence].w*10+Math.min(r,9);
@@ -415,14 +483,14 @@ function renderOrder(){
   list.forEach((x,i)=>{
     const s=x.s,li=document.createElement('li');
     const done=s.status==='supported'||s.status==='refuted';
-    li.innerHTML=`<div><span class="rank">${i+1}.</span><span class="text">${esc(s.text)}</span></div>
+    li.innerHTML=`<div><span class="rank">${i+1}.</span><span class="text">${esc(aText(s))}</span></div>
       <div class="chips"><span class="chip">${BOX[s.box].name}</span>
         <span class="chip ${x.c.key}" title="${esc(x.c.why)}">If false: ${x.c.label}</span>
         <span class="chip">Reach: ${x.r}</span>
         <span class="chip ${s.evidence==='leap'?'leap':''}">${EVID[s.evidence].label}</span>
         ${done?`<span class="chip done">${STATUS[s.status]}</span>`:''}</div>
       <div class="hint" style="margin:0">${esc(x.c.why)}</div>
-      ${x.bl&&s.status==='now'?`<p class="waiting">Waiting for an earlier assumption: "${esc(x.bl.text)}" is still a leap of faith. Test that assumption first.</p>`:''}
+      ${x.bl&&s.status==='now'?`<p class="waiting">Waiting for an earlier assumption: "${esc(aText(x.bl))}" is still a leap of faith. Test that assumption first.</p>`:''}
       ${NOT_BY_INTERVIEW[s.box]?`<p class="waiting">${NOT_BY_INTERVIEW[s.box]}</p>`:''}
       <div class="controls"><select>${Object.entries(STATUS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
         <input type="text" placeholder="What would make it testable?" ${s.status==='later'?'':'hidden'}></div>`;
@@ -453,7 +521,7 @@ function renderHyps(){
     const s=x.s,h=s.h;const app=S.apps.find(a=>aps(s).includes(a.id));
     if(!h.who&&app&&app.who)h.who=app.who;
     const d=document.createElement('details');d.className='item';if(i===0)d.open=true;
-    d.innerHTML=`<summary>${esc(s.text)}</summary>
+    d.innerHTML=`<summary>${esc(aText(s))}</summary>
       <div class="row">
         <div class="field"><label>Who, exactly</label><textarea data-k="who"></textarea></div>
         <div class="field"><label>What they do (fits "the last time you ___")</label><textarea data-k="behavior" placeholder="paid a supplier invoice"></textarea></div>
@@ -488,11 +556,11 @@ function renderPlanControls(){
   const box=$('#planCards');box.innerHTML='';
   const adv=S.plan.role==='advisor';$('#planCardsWrap').hidden=adv;$('#stopWrap').hidden=adv;
   const list=ranked().filter(x=>x.s.status==='now'&&!NOT_BY_INTERVIEW[x.s.box]&&aps(x.s).includes(S.plan.app));
-  if(!list.length){box.innerHTML='<p class="hint">Hypotheses for this opportunity appear here once you fill in step 04.</p>';}
+  if(!list.length){box.innerHTML='<p class="hint">Hypotheses for this business model appear here once you fill in step 04.</p>';}
   list.forEach(x=>{
     const l=document.createElement('label');l.className='check';
     const ready=x.s.h.behavior.trim();
-    l.innerHTML=`<input type="checkbox" ${S.plan.cards.includes(x.s.id)?'checked':''} ${ready?'':'disabled'}><span>${esc(x.s.h.sentence||x.s.text)}${ready?'':' <em>(add "what they do" in step 04 first)</em>'}</span>`;
+    l.innerHTML=`<input type="checkbox" ${S.plan.cards.includes(x.s.id)?'checked':''} ${ready?'':'disabled'}><span>${esc(x.s.h.sentence||aText(x.s))}${ready?'':' <em>(add "what they do" in step 04 first)</em>'}</span>`;
     l.querySelector('input').onchange=e=>{S.plan.cards=e.target.checked?[...S.plan.cards,x.s.id]:S.plan.cards.filter(id=>id!==x.s.id);save();renderPlan();};
     box.appendChild(l);
   });
@@ -526,7 +594,7 @@ function renderPlan(){
       <li>Plan to spend about a fifth of the time walking through your plan and the rest listening.</li></ul>
     <h2>Walk them through your plan</h2>
     <p>Show the canvas one box at a time, starting with the customer and the problem. Then show your current top five:</p>
-    ${top.length?`<ol>${top.map(x=>`<li>${esc(x.s.text)} <span class="listen">(${esc(BOX[x.s.box].name)}; ${esc(EVID[x.s.evidence].label.toLowerCase())})</span></li>`).join('')}</ol>`:'<p class="empty">Your top assumptions appear here once you list them in step 02.</p>'}
+    ${top.length?`<ol>${top.map(x=>`<li>${esc(aText(x.s))} <span class="listen">(${esc(BOX[x.s.box].name)}; ${esc(EVID[x.s.evidence].label.toLowerCase())})</span></li>`).join('')}</ol>`:'<p class="empty">Your top assumptions appear here once you list them in step 02.</p>'}
     <h2>Questions</h2>
     <ol><li class="say">"What do you consider the riskiest part of this plan?"</li>
       <li class="say">"Which of these assumptions would you rank differently, and why?"</li>
@@ -537,7 +605,7 @@ function renderPlan(){
     <h2>Right after</h2>
     <ul><li>Treat the advice as information about risk, not as a verdict. As Maurya quotes Venture Hacks: "Hire advisors for good advice but don't follow it, apply it."</li>
       <li>If the advisor named a risk you haven't listed, add it in step 02 as a new assumption.</li>
-      <li>If the advisor ranked an assumption higher than the tool did, ask yourself what loss they foresee. Then check the evidence rating and the opportunities the assumption applies to; the tool's order updates from those answers.</li>
+      <li>If the advisor ranked an assumption higher than the tool did, ask yourself what loss they foresee. Then check that answer's evidence rating and which business models it belongs to; the tool's order updates from those answers.</li>
       <li>Write down every name the advisor gave you. Those names are your first interviewees.</li></ul>`;
     return;
   }
@@ -560,7 +628,7 @@ function renderPlan(){
     <ol><li class="say">"To start, could you walk me through how ${esc(topic)} works for you, from start to finish?"</li>
       <li class="listen">Let them talk without interrupting. Note anything surprising; a surprise can point to an assumption you haven't listed.</li></ol>
     ${cards.length?(seen=>cards.map((s,i)=>`<h2>Hypothesis ${i+1}</h2>
-      <p class="listen">${esc(s.h.sentence||s.text)}</p>
+      <p class="listen">${esc(s.h.sentence||aText(s))}</p>
       <ol>${cardQuestions(s).filter(q=>!seen.has(q)&&seen.add(q)).map(q=>`<li class="say">"${esc(q)}"</li>`).join('')}</ol>
       ${s.h.measure.trim()?`<p class="listen">Listen for: ${esc(s.h.measure)}. If the story doesn't include this number, ask for an estimate for that specific time once they've finished the story.</p>`:''}
       ${s.h.falseIf.trim()?`<p class="listen">Counts against the hypothesis: ${esc(s.h.falseIf)}</p>`:''}`).join(''))(new Set())
@@ -577,20 +645,16 @@ function renderPlan(){
       <li>Compliments and promises about the future ("I'd definitely use that") don't count as evidence.</li></ul>
     <h2>Right after</h2>
     <ul><li>Mark each hypothesis <b>supports</b>, <b>contradicts</b> or <b>no data</b>, and note the quote behind each mark.</li>
-      <li>Write down anything you learned that your canvas doesn't cover, and add it in step 02 as a new assumption.</li>
+      <li>Write down anything you learned that your answers in step 02 don't cover, and add it there as a new answer.</li>
       <li>If an interview contradicts a hypothesis, revise the hypothesis or narrow who it covers. The count starts over at that revision.</li>
       <li>You have enough evidence to decide when a hypothesis lasts ${esc(S.stopN)} interviews in a row with this kind of person, from ${esc(S.stopK)}+ different sources, with no revision.</li></ul>`;
 }
 
 /* ---------- wiring ---------- */
-function renderComputed(){renderOrder();renderHyps();renderPlanControls();renderPlan();}
-function renderAll(){renderStart();renderAssumptions();renderComputed();}
+function renderComputed(){syncModels();renderOrder();renderHyps();renderPlanControls();renderPlan();}
+function renderAll(){renderStart();renderAnswers();renderComputed();}
 $('#idea').addEventListener('input',e=>{S.idea=e.target.value;grow(e.target);save();renderPlan();});
-document.querySelectorAll('#start input').forEach(r=>r.addEventListener('change',()=>{S.start=r.value;save();renderStart();renderAssumptions();}));
-$('#addApp').onclick=()=>{S.apps.push(newApp());save();renderAll();};
-$('#addAssumption').onclick=()=>{const a=newAssumption();if((S.start==='tech'||S.start==='product')&&!S.assumptions.some(s=>s.box==='tech'))a.box='tech';
-  a.apps=BOX[a.box].all?[]:(S.apps[0]?[S.apps[0].id]:[]);S.assumptions.push(a);save();renderAssumptions();renderComputed();
-  const t=document.querySelectorAll('#assumptions textarea');if(t.length)t[t.length-1].focus();};
+document.querySelectorAll('#start input').forEach(r=>r.addEventListener('change',()=>{S.start=r.value;save();renderStart();renderAnswers();renderComputed();}));
 $('#planApp').onchange=e=>{S.plan.app=e.target.value;S.plan.cards=[];save();renderPlanControls();renderPlan();};
 $('#planRole').onchange=e=>{S.plan.role=e.target.value;save();renderPlanControls();renderPlan();};
 ['stopN','stopK'].forEach(k=>$('#'+k).addEventListener('input',e=>{const v=parseInt(e.target.value,10);if(v>0){S[k]=v;save();renderPlan();}}));
@@ -602,12 +666,12 @@ $('#fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new Fil
   r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.apps))throw 0;S=migrate(Object.assign(blank(),d));save();renderAll();toast('Loaded.');}catch(err){toast("That file doesn't look like saved work from this tool.");}};
   r.readAsText(f);e.target.value='';};
 $('#exportCsv').onclick=()=>{
-  const cols=['Rank','Box','Opportunities','Assumption','Based on','If false','Reach','Status','Hypothesis','What they do','How much/often','When/where','Counts against it'];
+  const cols=['Rank','Box','Business models','Assumption','Based on','If false','Reach','Status','Hypothesis','What they do','How much/often','When/where','Counts against it'];
   const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const rows=ranked().map((x,i)=>{const s=x.s;
-    return [i+1,BOX[s.box].name,BOX[s.box].all?'All':aps(s).map(id=>appLabel(S.apps[appIndex(id)]||{},appIndex(id))).join('; '),s.text,EVID[s.evidence].label,x.c.label,x.r,STATUS[s.status],s.h.sentence,s.h.behavior,s.h.measure,s.h.context,s.h.falseIf].map(q).join(',');});
+    return [i+1,BOX[s.box].name,BOX[s.box].all?'All':aps(s).map(id=>appLabel(S.apps[appIndex(id)]||{},appIndex(id))).join('; '),aText(s),EVID[s.evidence].label,x.c.label,x.r,STATUS[s.status],s.h.sentence,s.h.behavior,s.h.measure,s.h.context,s.h.falseIf].map(q).join(',');});
   download('leap-to-evidence-cards.csv',[cols.map(q).join(','),...rows].join('\n'),'text/csv');toast('Downloaded.');};
-$('#loadExample').onclick=()=>{if(S.assumptions.length&&!confirm('Replace your work with the example? Download your work first if you want to keep it.'))return;S=example();save();renderAll();toast('Example loaded.');};
+$('#loadExample').onclick=()=>{if(S.assumptions.length&&!confirm('Replace your work with the example? Download your work first if you want to keep it.'))return;S=migrate(example());save();renderAll();toast('Example loaded.');};
 $('#clearAll').onclick=()=>{if(confirm('Clear everything and start over? Download your work first if you want to keep it.')){S=blank();save();renderAll();}};
 renderAll();
 const regrow=()=>document.querySelectorAll('textarea').forEach(grow);
