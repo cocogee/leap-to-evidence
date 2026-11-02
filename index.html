@@ -336,8 +336,8 @@ function renderStart(){
     const d=document.createElement('div');d.className='item';
     d.innerHTML=`<div class="itemhead"><span class="tag">${i===0?'PRIMARY OPPORTUNITY':'OTHER OPPORTUNITY '+String.fromCharCode(65+i)}</span>${S.apps.length>1?'<button class="x" type="button" title="Remove">×</button>':''}</div>
       <div class="row">
-        <div class="field"><label>Customer: who has the problem</label><textarea data-k="who" placeholder="Owners of independent coffee shops with 1 to 3 locations"></textarea></div>
-        <div class="field"><label>Application: the problem you would solve</label><textarea data-k="problem" placeholder="Matching supplier invoices to deliveries by hand"></textarea></div>
+        <div class="field"><label>Customer</label><textarea data-k="who" placeholder="Owners of independent coffee shops with 1 to 3 locations"></textarea></div>
+        <div class="field"><label>Application</label><textarea data-k="problem" placeholder="Matching supplier invoices to deliveries by hand"></textarea></div>
       </div>
       <div class="row">
         <div class="field"><label>What they use now</label><textarea data-k="now" placeholder="Paper files, a spreadsheet, their bookkeeper"></textarea></div>
