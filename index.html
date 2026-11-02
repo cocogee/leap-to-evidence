@@ -102,6 +102,25 @@ button.linkbtn:hover{background:none;color:var(--ink)}
 .x.small{width:28px;height:28px;font-size:15px;margin-left:auto}
 .field.topic{margin:-6px 0 26px;padding:14px 16px;border-radius:10px;background:var(--field)}
 textarea:disabled{opacity:.45}
+.hyp{margin:18px 0 6px;padding:14px 16px;border-radius:10px;background:var(--blue-soft)}
+.hyp .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.hyptext{margin:0;font-size:16px;line-height:1.6}
+.hyptext.pending{color:var(--ink2);font-style:italic;font-size:14.5px}
+.bigcount{font-family:var(--disp);font-size:15px;color:var(--ink2);margin:4px 0 10px}
+.bigcount span{font-size:28px;font-weight:700;color:var(--ink);margin-right:6px}
+input[type=date]{width:100%;font-family:var(--disp);font-size:14.5px;color:var(--ink);background:var(--field);border:1px solid var(--line);padding:8px 12px;border-radius:8px}
+.ivrow{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.ivh{margin:0 0 8px;font-size:14.5px}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{display:flex;gap:6px;align-items:center;font-family:var(--disp);font-size:13px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;margin:0;font-weight:500}
+.seg label:has(input:checked){border-color:var(--blue);background:var(--blue-soft)}
+.seg input{accent-color:var(--blue);margin:0}
+.ivlist{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px}
+.ivlist li{position:relative;border:1px solid var(--line);border-radius:10px;padding:14px 48px 12px 16px}
+.ivlist .x{position:absolute;top:10px;right:10px}
+.ivmeta{font-family:var(--disp);font-size:13.5px}
+.ivres{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.ivq{font-style:italic;font-size:14px;color:var(--ink2);margin:6px 0 0}
 .warn{font-family:var(--disp);font-size:13.5px;color:var(--accent);margin:4px 0}
 .okmsg{font-family:var(--disp);font-size:13.5px;color:var(--ok);margin:4px 0}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:12px 0;line-height:1.6}
@@ -229,7 +248,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 <section class="card" id="s4">
   <h2><span class="n">04</span>Make them testable</h2>
   <p class="lede">An assumption becomes a hypothesis once it's specific enough that a single conversation can prove it wrong.</p>
-  <p class="hint">Fill in the four parts, then write the sentence. Describe something people <b>already do</b>, not what they feel or would do.</p>
+  <p class="hint">Answer the four questions. The tool writes your hypothesis from your answers.</p>
   <div id="hyps"></div>
 </section>
 
@@ -261,6 +280,33 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   </div>
   <div class="toast" id="toast" role="status"></div>
 </section>
+<!-- 6. Interview log -->
+<section class="card" id="s6">
+  <h2><span class="n">06</span>Log your interviews</h2>
+  <p class="lede">Log each interview right after it ends. The tool counts the results and marks a hypothesis validated once it meets your stopping rule.</p>
+  <p class="bigcount"><span id="ivCount">0</span> interviews logged</p>
+  <div class="row">
+    <div class="field"><label for="ivDate">Date</label><input type="date" id="ivDate"></div>
+    <div class="field"><label for="ivSource">Where you found them</label><input type="text" id="ivSource" placeholder="LinkedIn search"></div>
+  </div>
+  <div class="row">
+    <div class="field"><label for="ivApp">Business model</label><select id="ivApp"></select></div>
+    <div class="field"><label for="ivRole">Their role</label><select id="ivRole"></select></div>
+  </div>
+  <div class="field"><label for="ivWho">Who (initials or a short note; no full names)</label><input type="text" id="ivWho" placeholder="J.R., owner of two cafes"></div>
+  <span class="lbl">What this interview showed</span>
+  <div id="ivResults"></div>
+  <div class="field"><label for="ivQuote">The quote that mattered most</label><textarea id="ivQuote" placeholder="Their exact words"></textarea></div>
+  <div class="field"><label for="ivNew">Anything new your answers in step 02 don't cover</label><textarea id="ivNew" placeholder="Add it in step 02 as a new answer"></textarea></div>
+  <div class="toolbar">
+    <button class="primary" type="button" id="ivSave">Save this interview</button>
+    <button type="button" id="ivCsv">Interview log as spreadsheet</button>
+    <button type="button" id="ivMerge">Add a teammate's interviews</button>
+    <input type="file" id="mergeIn" accept="application/json" hidden>
+  </div>
+  <ul class="ivlist" id="ivList"></ul>
+</section>
+
 
 </div>
 
@@ -307,7 +353,7 @@ const BOX=Object.fromEntries(BOXES.map(b=>[b.id,b]));
 const STAGES={1:'Stage 1: customer and problem',2:'Stage 2: solution and money',3:'Stage 3: running and defending the business'};
 const STAGE_HINT={1:'Start here. Everything else depends on these answers.',2:'Open this stage once your stage 1 answers have some support.',3:'Open this stage once your stage 2 answers have some support.'};
 const EVID={leap:{label:'Leap of faith',w:3},anecdote:{label:'Anecdote',w:2},fact:{label:'Fact',w:1}};
-const STATUS={now:'Test now',later:"Can't test yet",supported:'Supported enough to decide',refuted:'Refuted'};
+const STATUS={now:'Test now',later:"Can't test yet",supported:'Validated',refuted:'Refuted'};
 const ROLES={
   user:{name:'End user',hint:'The person who has the problem day to day. Best for: the problem, how they handle it now, how often it happens.'},
   buyer:{name:'Economic buyer',hint:'The person who controls the money. Best for: budgets, what they pay for now, how purchases get approved.'},
@@ -328,8 +374,8 @@ const NOT_BY_INTERVIEW={tech:'Whether the technology or product works is settled
 function uid(){return Math.random().toString(36).slice(2,9);}
 function newApp(){return {id:uid(),topic:''};}
 function newAssumption(){return {id:uid(),apps:[],box:'segment',text:'',unknown:false,evidence:'leap',status:'now',trigger:'',
-  h:{who:'',behavior:'',measure:'',context:'',sentence:'',falseIf:'',crux:false}};}
-function blank(){const m=newApp();return {idea:'',start:'',apps:[m],active:m.id,assumptions:[],plan:{app:'',role:'user',cards:[]},stopN:12,stopK:3};}
+  h:{who:'',what:'',measure:'',context:'',falseIf:'',crux:false,since:0}};}
+function blank(){const m=newApp();return {idea:'',start:'',apps:[m],active:m.id,assumptions:[],interviews:[],plan:{app:'',role:'user',cards:[]},stopN:12,stopK:3};}
 /* A fictional venture so people can see a finished example. */
 function example(){
   const A={id:'exA',topic:'paying suppliers'},B={id:'exB',topic:'receiving deliveries'};
@@ -339,12 +385,10 @@ function example(){
       mk('e1','','tech','It reads crumpled, handwritten supplier invoices correctly','anecdote'),
       mk('e8','exA','segment','Owners of independent coffee shops with 1 to 3 locations','anecdote'),
       mk('e2','exA','problem','Matching supplier invoices to deliveries by hand takes them hours every week','leap',
-        {who:'Owners of independent coffee shops with 1 to 3 locations',behavior:'matched a supplier invoice to a delivery',measure:'2 or more hours a week',context:'usually at the end of the week',
-         sentence:'Owners of independent coffee shops with 1 to 3 locations spend 2 or more hours a week matching supplier invoices to deliveries by hand.',
+        {who:'Owners of independent coffee shops with 1 to 3 locations',what:'match supplier invoices to deliveries by hand',measure:'for 2 or more hours a week',context:'usually at the end of the week',
          falseIf:'Someone else does it for them, or it takes a few minutes.',crux:true}),
       mk('e3','exA','segment','The owners do this work themselves, not a bookkeeper','leap',
-        {who:'Owners of independent coffee shops with 1 to 3 locations',behavior:'dealt with a supplier invoice',measure:'the owner personally handles most invoices',
-         sentence:'In most of these shops, the owner personally handles supplier invoices.',falseIf:'A bookkeeper or manager handles them.',crux:true}),
+        {who:'Owners of independent coffee shops with 1 to 3 locations',what:'handle supplier invoices themselves',measure:'for most of their invoices',falseIf:'A bookkeeper or manager handles them.',crux:true}),
       mk('e9','exA','alternatives','Paper files, a spreadsheet, or their bookkeeper','anecdote'),
       mk('e10','exA','uvp','It does the matching in seconds with no typing','leap'),
       mk('e9b','exB','segment','Kitchen managers at small restaurants','anecdote'),
@@ -352,6 +396,9 @@ function example(){
       mk('e7',['exA','exB'],'segment','Small food businesses still get most supplier invoices on paper','anecdote'),
       mk('e5',['exA','exB'],'channels','Through the suppliers who already deliver to them','leap'),
       mk('e4','exA','revenue','A monthly subscription of about $30','leap')],
+    interviews:[['2026-10-05','LinkedIn search','supports','supports'],['2026-10-06','Introductions','supports','supports'],['2026-10-08','Online forums','supports','contradicts'],
+      ['2026-10-09','Introductions','supports',''],['2026-10-12','LinkedIn search','supports','']].map(([date,source,r2,r3],i)=>({id:'iv'+i,at:Date.parse(date)+i,date,app:'exA',role:'user',source,who:'',
+      results:Object.assign({e2:r2},r3?{e3:r3}:{}),quote:i===2?'My bookkeeper handles all of that. I just sign the checks.':'',newA:''})),
     plan:{app:'exA',role:'user',cards:['e2','e3']},stopN:12,stopK:3};
 }
 
@@ -360,6 +407,8 @@ try{S=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){S=null;}
 if(!S||!Array.isArray(S.apps))S=blank();
 /* Older saves kept customer and problem on the opportunity itself; turn those into answers. */
 function migrate(st){
+  if(!Array.isArray(st.interviews))st.interviews=[];
+  (st.assumptions||[]).forEach(a=>{const h=a.h||(a.h={});if(h.what==null)h.what=h.behavior||'';delete h.behavior;delete h.sentence;if(h.since==null)h.since=0;});
   (st.assumptions||[]).forEach(a=>{if(!Array.isArray(a.apps)){a.apps=a.app?[a.app]:[];}delete a.app;if(!BOX[a.box])a.box='segment';});
   (st.apps||[]).forEach(m=>{[['who','segment'],['problem','problem'],['now','alternatives']].forEach(([k,box])=>{
     if(m[k]&&m[k].trim()&&!st.assumptions.some(a=>a.box===box&&a.apps.includes(m.id))){const a=newAssumption();a.box=box;a.text=m[k];a.apps=[m.id];st.assumptions.push(a);}
@@ -489,13 +538,13 @@ function consequence(s){
 }
 function reach(s){return S.assumptions.filter(o=>o!==s&&aText(o)&&sameChain(s,o)&&BOX[o.box].order>BOX[s.box].order).length;}
 function blocker(s){
-  return S.assumptions.find(o=>o!==s&&aText(o)&&o.box!=='tech'&&sameChain(s,o)&&BOX[o.box].order<BOX[s.box].order&&o.evidence==='leap'&&o.status!=='supported'&&o.status!=='refuted');
+  return S.assumptions.find(o=>o!==s&&aText(o)&&o.box!=='tech'&&sameChain(s,o)&&BOX[o.box].order<BOX[s.box].order&&o.evidence==='leap'&&effStatus(o)!=='supported'&&effStatus(o)!=='refuted');
 }
 function ranked(){
   return S.assumptions.filter(s=>aText(s)).map(s=>{
     const c=consequence(s),r=reach(s),bl=blocker(s);
-    const active=s.status==='now'&&!bl;
-    const score=(active?1000:s.status==='now'?500:s.status==='later'?100:0)+c.w*100+EVID[s.evidence].w*10+Math.min(r,9);
+    const st=effStatus(s),active=st==='now'&&!bl;
+    const score=(active?1000:st==='now'?500:st==='later'?100:0)+c.w*100+EVID[s.evidence].w*10+Math.min(r,9);
     return {s,c,r,bl,score};
   }).sort((a,b)=>b.score-a.score||BOX[a.s.box].order-BOX[b.s.box].order);
 }
@@ -505,20 +554,20 @@ function renderOrder(){
   if(!list.length){ol.innerHTML='<li class="hint">Your assumptions will appear here in testing order.</li>';return;}
   list.forEach((x,i)=>{
     const s=x.s,li=document.createElement('li');
-    const done=s.status==='supported'||s.status==='refuted';
+    const st=effStatus(s),ev=NOT_BY_INTERVIEW[s.box]?null:evidence(s),done=st==='supported'||st==='refuted';
     li.innerHTML=`<div><span class="rank">${i+1}.</span><span class="text">${esc(aText(s))}</span></div>
       <div class="chips"><span class="chip">${BOX[s.box].name}</span>
         <span class="chip ${x.c.key}" title="${esc(x.c.why)}">If false: ${x.c.label}</span>
         <span class="chip">Reach: ${x.r}</span>
         <span class="chip ${s.evidence==='leap'?'leap':''}">${EVID[s.evidence].label}</span>
-        ${done?`<span class="chip done">${STATUS[s.status]}</span>`:''}</div>
+        ${done?`<span class="chip done">${STATUS[st]}</span>`:ev?`<span class="chip ${ev.key==='contradicted'?'stop':'pivot'}">${esc(ev.label)}</span>`:''}</div>
       <div class="hint" style="margin:0">${esc(x.c.why)}</div>
-      ${x.bl&&s.status==='now'?`<p class="waiting">Waiting for an earlier assumption: "${esc(aText(x.bl))}" is still a leap of faith. Test that assumption first.</p>`:''}
+      ${x.bl&&st==='now'?`<p class="waiting">Waiting for an earlier assumption: "${esc(aText(x.bl))}" is still a leap of faith. Test that assumption first.</p>`:''}
       ${NOT_BY_INTERVIEW[s.box]?`<p class="waiting">${NOT_BY_INTERVIEW[s.box]}</p>`:''}
-      <div class="controls"><select>${Object.entries(STATUS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+      <div class="controls"><select>${Object.entries(STATUS).filter(([k])=>NOT_BY_INTERVIEW[s.box]||k==='now'||k==='later').map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
         <input type="text" placeholder="What would make it testable?" ${s.status==='later'?'':'hidden'}></div>`;
     const sel=li.querySelector('select'),inp=li.querySelector('input');
-    sel.value=s.status;inp.value=s.trigger;
+    sel.value=NOT_BY_INTERVIEW[s.box]?s.status:(s.status==='later'?'later':'now');inp.value=s.trigger;if(st==='supported'&&!NOT_BY_INTERVIEW[s.box])li.querySelector('.controls').hidden=true;
     sel.onchange=()=>{s.status=sel.value;save();renderComputed();};
     inp.oninput=()=>{s.trigger=inp.value;save();};
     ol.appendChild(li);
@@ -526,19 +575,26 @@ function renderOrder(){
 }
 
 /* ---------- 4. hypotheses ---------- */
-const FEELING=/\b(would|will|want|wants|like|likes|love|interested|frustrat\w*|hate|hates|need|needs|prefer\w*)\b/i;
+const FEELING=/\b(would|will|want|wants|like|likes|love|interested|frustrat\w*|hate|hates|need|needs|prefer\w*|feel|feels|think|thinks)\b/i;
+/* The tool writes the hypothesis from the four answers. */
+function hypSentence(h){
+  const what=(h.what||'').trim().replace(/[.\s]+$/,'');if(!what)return '';
+  let t=[(h.who||'').trim(),what,(h.measure||'').trim()].filter(Boolean).join(' ');
+  if((h.context||'').trim())t+=', '+h.context.trim().replace(/[.\s]+$/,'');
+  return t.charAt(0).toUpperCase()+t.slice(1)+'.';
+}
 function hypWarnings(h){
-  const w=[];const t=(h.sentence||'').trim();
-  if(!t)return w;
-  if(FEELING.test(t))w.push('This hypothesis reads like a feeling or a prediction. Rewrite it as something people have already done.');
-  if(/\band\b|\bor\b/i.test(t))w.push('This hypothesis may contain two claims. If one can be true while the other is false, split them into two cards.');
-  if(!h.measure.trim())w.push('Add how much or how often, so you know what result counts against the hypothesis.');
-  if(!h.who.trim())w.push('Say exactly who. "People" or "businesses" is too broad to find or contradict.');
+  const w=[];
+  if(!(h.what||'').trim())return w;
+  if(FEELING.test(h.what))w.push('"What they do" reads like a feeling or a prediction. Describe an action they already take, such as "match invoices by hand."');
+  if(/\band\b|\bor\b/i.test(h.what))w.push('"What they do" may contain two actions. If one can be true while the other is false, split them into two hypotheses.');
+  if(!(h.measure||'').trim())w.push('Add how much or how often, so you know what result counts against the hypothesis.');
+  if(!(h.who||'').trim())w.push('Say exactly who. "People" or "businesses" is too broad to find or contradict.');
   return w;
 }
 function renderHyps(){
   const box=$('#hyps');box.innerHTML='';
-  const list=ranked().filter(x=>x.s.status==='now'&&!NOT_BY_INTERVIEW[x.s.box]);
+  const list=ranked().filter(x=>effStatus(x.s)==='now'&&!NOT_BY_INTERVIEW[x.s.box]);
   if(!list.length){box.innerHTML='<p class="hint">Assumptions marked "Test now" appear here, in testing order.</p>';return;}
   list.forEach((x,i)=>{
     const s=x.s,h=s.h;const app=S.apps.find(a=>aps(s).includes(a.id));
@@ -547,25 +603,78 @@ function renderHyps(){
     d.innerHTML=`<summary>${esc(aText(s))}</summary>
       <div class="row">
         <div class="field"><label>Who, exactly</label><textarea data-k="who"></textarea></div>
-        <div class="field"><label>What they do (fits "the last time you ___")</label><textarea data-k="behavior" placeholder="paid a supplier invoice"></textarea></div>
+        <div class="field"><label>What they do</label><textarea data-k="what" placeholder="match supplier invoices to deliveries by hand"></textarea></div>
       </div>
       <div class="row">
-        <div class="field"><label>How much or how often</label><textarea data-k="measure" placeholder="2 or more hours a week"></textarea></div>
-        <div class="field"><label>When or where</label><textarea data-k="context" placeholder="at the end of each month"></textarea></div>
+        <div class="field"><label>How much or how often</label><textarea data-k="measure" placeholder="for 2 or more hours a week"></textarea></div>
+        <div class="field"><label>When or where</label><textarea data-k="context" placeholder="at the end of each week"></textarea></div>
       </div>
-      <div class="field"><label>Your hypothesis, in one sentence</label><textarea data-k="sentence" placeholder="Owners of independent coffee shops spend 2 or more hours a week matching supplier invoices to deliveries by hand."></textarea></div>
+      <p class="hint" style="margin:0">For "What they do," write an action they already take, so it fits "they ___."</p>
+      <div class="hyp"><span class="lbl">Your hypothesis</span><p class="hyptext"></p></div>
       <div class="field"><label>What would you hear if the hypothesis is false?</label><textarea data-k="falseIf" placeholder="Someone else does it for them, or it takes a few minutes."></textarea></div>
       <label class="check"><input type="checkbox" data-k="crux"><span>A single interview can prove this hypothesis wrong.</span></label>
       <div class="msgs"></div>`;
-    const msgs=d.querySelector('.msgs');
-    const refresh=()=>{const w=hypWarnings(h);msgs.innerHTML=w.map(m=>`<p class="warn">${esc(m)}</p>`).join('')+(h.sentence&&!w.length&&h.crux?'<p class="okmsg">Ready to test.</p>':'');};
+    const msgs=d.querySelector('.msgs'),out=d.querySelector('.hyptext');
+    const refresh=()=>{const t=hypSentence(h);out.textContent=t||'Answer the four questions above.';out.classList.toggle('pending',!t);
+      const w=hypWarnings(h),ev=evidence(s);
+      let st='';
+      if(ev&&ev.key==='contradicted')st=`<p class="warn">An interview contradicted this hypothesis. Revise it or narrow who it covers, then start a new count. <button type="button" class="linkbtn" data-act="recount">Start a new count</button></p>`;
+      else if(ev)st=`<p class="okmsg">${esc(ev.label)}</p>`;
+      msgs.innerHTML=w.map(m=>`<p class="warn">${esc(m)}</p>`).join('')+st+(!ev&&t&&!w.length&&h.crux?'<p class="okmsg">Ready to test.</p>':'');
+      const rc=msgs.querySelector('[data-act=recount]');if(rc)rc.onclick=()=>{h.since=Date.now();save();renderComputed();};};
     d.querySelectorAll('[data-k]').forEach(el=>{
       if(el.type==='checkbox'){el.checked=!!h.crux;el.onchange=()=>{h.crux=el.checked;save();refresh();renderPlan();};return;}
-      el.value=h[el.dataset.k];el.addEventListener('input',()=>{h[el.dataset.k]=el.value;grow(el);save();refresh();renderPlan();});
+      el.value=h[el.dataset.k]||'';el.addEventListener('input',()=>{h[el.dataset.k]=el.value;grow(el);save();refresh();renderPlanControls();renderPlan();renderLogForm();});
     });
     refresh();box.appendChild(d);
     requestAnimationFrame(()=>d.querySelectorAll('textarea').forEach(grow));
   });
+}
+
+/* ---------- 6. interview log ---------- */
+/* Validation is counted, not judged: N interviews in a row with one kind of customer in one role, from K sources, since the last revision. */
+function evidence(s){
+  const ivs=(S.interviews||[]).filter(v=>v.results&&v.results[s.id]&&v.results[s.id]!=='nodata'&&v.at>((s.h&&s.h.since)||0));
+  if(!ivs.length)return null;
+  if(ivs.some(v=>v.results[s.id]==='contradicts'))return {key:'contradicted',label:'Contradicted: revise or narrow'};
+  const byRole={};ivs.forEach(v=>{(byRole[v.role]=byRole[v.role]||[]).push(v);});
+  let best=null;Object.entries(byRole).forEach(([r,l])=>{const n=l.length,k=new Set(l.map(v=>(v.source||'').trim().toLowerCase()).filter(Boolean)).size;
+    if(!best||n>best.n||(n===best.n&&k>best.k))best={r,n,k};});
+  const rn=ROLES[best.r]?ROLES[best.r].name.toLowerCase():best.r;
+  if(best.n>=S.stopN&&best.k>=S.stopK)return {key:'validated',label:`Validated: ${best.n} interviews with ${rn}s from ${best.k} sources`};
+  return {key:'testing',label:`Testing: ${best.n} of ${S.stopN} interviews, ${best.k} of ${S.stopK} sources (${rn}s)`};
+}
+function effStatus(s){
+  if(!NOT_BY_INTERVIEW[s.box]){const ev=evidence(s);if(ev&&ev.key==='validated')return 'supported';}
+  return s.status;
+}
+function renderLogForm(){
+  const pa=$('#ivApp');if(!pa)return;
+  const keep=pa.value;
+  pa.innerHTML=S.apps.map((a,j)=>`<option value="${a.id}">${esc(appLabel(a,j))}</option>`).join('');
+  pa.value=S.apps.some(a=>a.id===keep)?keep:(S.plan.app||S.apps[0].id);
+  const pr=$('#ivRole');if(!pr.options.length){pr.innerHTML=Object.entries(ROLES).filter(([k])=>k!=='advisor').map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');}
+  const box=$('#ivResults');const prev={};box.querySelectorAll('input:checked').forEach(r=>prev[r.name]=r.value);box.innerHTML='';
+  const list=S.assumptions.filter(s=>aText(s)&&!NOT_BY_INTERVIEW[s.box]&&(s.h.what||'').trim()&&aps(s).includes(pa.value));
+  if(!list.length){box.innerHTML='<p class="hint">Hypotheses for this business model appear here once you complete them in step 04.</p>';return;}
+  list.forEach(s=>{const n='r_'+s.id;const d=document.createElement('div');d.className='ivrow';
+    d.innerHTML=`<p class="ivh">${esc(hypSentence(s.h))}</p><div class="seg">${[['supports','Supports'],['contradicts','Contradicts'],['nodata','No data']].map(([v,l])=>`<label><input type="radio" name="${n}" value="${v}" ${prev[n]===v||(!prev[n]&&v==='nodata')?'checked':''}><span>${l}</span></label>`).join('')}</div>`;
+    box.appendChild(d);});
+}
+function renderLog(){
+  renderLogForm();
+  const ivs=S.interviews||[];
+  $('#ivCount').textContent=ivs.length;
+  const ul=$('#ivList');ul.innerHTML='';
+  if(!ivs.length){ul.innerHTML='<li class="hint">No interviews logged yet.</li>';return;}
+  ivs.slice().sort((a,b)=>b.at-a.at).forEach(v=>{
+    const m=S.apps.find(a=>a.id===v.app);const li=document.createElement('li');
+    const res=Object.entries(v.results||{}).filter(([,r])=>r!=='nodata');
+    li.innerHTML=`<div class="ivmeta"><b>${esc(v.date||'')}</b> · ${esc(m?appShort(m,appIndex(m.id)):'Deleted business model')} · ${esc(ROLES[v.role]?ROLES[v.role].name:v.role)} · ${esc(v.source||'no source')}${v.who?' · '+esc(v.who):''}</div>
+      <div class="ivres">${res.length?res.map(([id,r])=>{const s=S.assumptions.find(x=>x.id===id);return `<span class="chip ${r==='supports'?'done':'stop'}">${r==='supports'?'Supports':'Contradicts'}: ${esc(s?cut((s.h.what||'').trim()||aText(s),60):'deleted')}</span>`;}).join(''):'<span class="hint">No hypothesis results recorded.</span>'}</div>
+      ${v.quote?`<p class="ivq">"${esc(v.quote)}"</p>`:''}<button class="x small" type="button" title="Delete this interview">×</button>`;
+    li.querySelector('.x').onclick=()=>{if(!confirm('Delete this interview from the log?'))return;S.interviews=S.interviews.filter(x=>x!==v);save();renderComputed();};
+    ul.appendChild(li);});
 }
 
 /* ---------- 5. plan ---------- */
@@ -578,24 +687,25 @@ function renderPlanControls(){
   pr.value=S.plan.role;$('#roleHint').textContent=ROLES[S.plan.role].hint;
   const box=$('#planCards');box.innerHTML='';
   const adv=S.plan.role==='advisor';$('#printOnePager').hidden=!adv;$('#planCardsWrap').hidden=adv;$('#stopWrap').hidden=adv;
-  const list=ranked().filter(x=>x.s.status==='now'&&!NOT_BY_INTERVIEW[x.s.box]&&aps(x.s).includes(S.plan.app));
+  const list=ranked().filter(x=>effStatus(x.s)==='now'&&!NOT_BY_INTERVIEW[x.s.box]&&aps(x.s).includes(S.plan.app));
   if(!list.length){box.innerHTML='<p class="hint">Hypotheses for this business model appear here once you fill in step 04.</p>';}
   list.forEach(x=>{
     const l=document.createElement('label');l.className='check';
-    const ready=x.s.h.behavior.trim();
-    l.innerHTML=`<input type="checkbox" ${S.plan.cards.includes(x.s.id)?'checked':''} ${ready?'':'disabled'}><span>${esc(x.s.h.sentence||aText(x.s))}${ready?'':' <em>(add "what they do" in step 04 first)</em>'}</span>`;
+    const ready=(x.s.h.what||'').trim();
+    l.innerHTML=`<input type="checkbox" ${S.plan.cards.includes(x.s.id)?'checked':''} ${ready?'':'disabled'}><span>${esc(hypSentence(x.s.h)||aText(x.s))}${ready?'':' <em>(add "what they do" in step 04 first)</em>'}</span>`;
     l.querySelector('input').onchange=e=>{S.plan.cards=e.target.checked?[...S.plan.cards,x.s.id]:S.plan.cards.filter(id=>id!==x.s.id);save();renderPlan();};
     box.appendChild(l);
   });
   $('#stopN').value=S.stopN;$('#stopK').value=S.stopK;
 }
 function cardQuestions(s){
-  const h=s.h,b=s.box,beh=h.behavior.trim().replace(/[.?]$/,'');
-  const q=[`Tell me about the last time you ${beh}.`,
+  const h=s.h,b=s.box,beh=(h.what||'').trim().replace(/[.?]$/,'');
+  const q=[`Tell me about the last time you had to ${beh}.`,
     'Walk me through that day. Where were you, and what were you using?',
     'What happened next?'];
   if(b==='problem'||b==='segment'||b==='alternatives'){q.push('What have you tried to make that easier?','What happens when it goes wrong?');}
   if(b==='uvp'||b==='solution'){q.push('Tell me about the last time you tried a new way of handling this. What made you try it?','How did that turn out?');}
+  if(b==='relationships'){q.push('Tell me about the last time you stopped using a product or service for this. What made you stop?');}
   if(b==='channels'){q.push('Tell me about how you found the last tool or service you started using for this.');}
   if(b==='revenue'){q.push('Tell me about the last time you paid for something to help with this. How did that decision get made?');}
   q.push('Why was that?');
@@ -606,7 +716,7 @@ function renderPlan(){
   const el=$('#plan');
   const head=(sub)=>`<div class="phead"><div class="peye">Leap to Evidence · ${sub}</div><h1>${esc(S.idea.trim()||'Your idea')}</h1>`;
   if(S.plan.role==='advisor'){
-    const top=ranked().filter(x=>x.s.status==='now'||x.s.status==='later').slice(0,5);
+    const top=ranked().filter(x=>effStatus(x.s)==='now'||effStatus(x.s)==='later').slice(0,5);
     el.innerHTML=`${head('Advisor conversation')}<div class="meta">Advisor or coach · before customer interviews</div></div>
     <h2>Why talk to an advisor first</h2>
     <p>An experienced advisor can point out risks in the whole plan that customers can't see. You're asking for their judgment on your risks, not their approval of your idea.</p>
@@ -632,7 +742,7 @@ function renderPlan(){
       <li>Write down every name the advisor gave you. Those names are your first interviewees.</li></ul>`;
     return;
   }
-  const cards=S.plan.cards.map(id=>S.assumptions.find(s=>s.id===id)).filter(s=>s&&s.h.behavior.trim()&&aps(s).includes(S.plan.app));
+  const cards=S.plan.cards.map(id=>S.assumptions.find(s=>s.id===id)).filter(s=>s&&(s.h.what||'').trim()&&aps(s).includes(S.plan.app));
   const topic=(app&&app.topic.trim())||'this part of your work';
   const who=(app&&app.who.trim())||'(who has the problem: fill in step 01)';
   el.innerHTML=`${head('Interview plan')}
@@ -651,7 +761,7 @@ function renderPlan(){
     <ol><li class="say">"To start, could you walk me through how ${esc(topic)} works for you, from start to finish?"</li>
       <li class="listen">Let them talk without interrupting. Note anything surprising; a surprise can point to an assumption you haven't listed.</li></ol>
     ${cards.length?(seen=>cards.map((s,i)=>`<h2>Hypothesis ${i+1}</h2>
-      <p class="listen">${esc(s.h.sentence||aText(s))}</p>
+      <p class="listen">${esc(hypSentence(s.h)||aText(s))}</p>
       <ol>${cardQuestions(s).filter(q=>!seen.has(q)&&seen.add(q)).map(q=>`<li class="say">"${esc(q)}"</li>`).join('')}</ol>
       ${s.h.measure.trim()?`<p class="listen">Listen for: ${esc(s.h.measure)}. If the story doesn't include this number, ask for an estimate for that specific time once they've finished the story.</p>`:''}
       ${s.h.falseIf.trim()?`<p class="listen">Counts against the hypothesis: ${esc(s.h.falseIf)}</p>`:''}`).join(''))(new Set())
@@ -677,7 +787,7 @@ function renderPlan(){
 function renderOnePager(){
   const models=S.apps.slice(0,3);
   const rows=[['segment','Customer'],['problem','Problem'],['alternatives','What they do now'],['uvp','Why they would choose us']];
-  const top=ranked().filter(x=>x.s.status==='now'||x.s.status==='later').slice(0,5);
+  const top=ranked().filter(x=>effStatus(x.s)==='now'||effStatus(x.s)==='later').slice(0,5);
   const blank='<span class="blankline"></span>';
   $('#onepager').innerHTML=`<div class="phead"><div class="peye">Leap to Evidence · For our advisor</div>
       <h1>${esc(S.idea.trim()||'Our idea')}</h1>
@@ -700,7 +810,7 @@ function renderOnePager(){
 }
 
 /* ---------- wiring ---------- */
-function renderComputed(){syncModels();renderOrder();renderHyps();renderPlanControls();renderPlan();}
+function renderComputed(){syncModels();renderOrder();renderHyps();renderPlanControls();renderPlan();renderLog();}
 function renderAll(){renderStart();renderAnswers();renderComputed();}
 $('#idea').addEventListener('input',e=>{S.idea=e.target.value;grow(e.target);save();renderPlan();});
 document.querySelectorAll('#start input').forEach(r=>r.addEventListener('change',()=>{S.start=r.value;save();renderStart();renderAnswers();renderComputed();}));
@@ -720,8 +830,25 @@ $('#exportCsv').onclick=()=>{
   const cols=['Rank','Box','Business models','Assumption','Based on','If false','Reach','Status','Hypothesis','What they do','How much/often','When/where','Counts against it'];
   const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const rows=ranked().map((x,i)=>{const s=x.s;
-    return [i+1,BOX[s.box].name,BOX[s.box].all?'All':aps(s).map(id=>appLabel(S.apps[appIndex(id)]||{},appIndex(id))).join('; '),aText(s),EVID[s.evidence].label,x.c.label,x.r,STATUS[s.status],s.h.sentence,s.h.behavior,s.h.measure,s.h.context,s.h.falseIf].map(q).join(',');});
+    return [i+1,BOX[s.box].name,BOX[s.box].all?'All':aps(s).map(id=>appLabel(S.apps[appIndex(id)]||{},appIndex(id))).join('; '),aText(s),EVID[s.evidence].label,x.c.label,x.r,STATUS[effStatus(s)],hypSentence(s.h),s.h.what,s.h.measure,s.h.context,s.h.falseIf].map(q).join(',');});
   download('leap-to-evidence-cards.csv',[cols.map(q).join(','),...rows].join('\n'),'text/csv');toast('Downloaded.');};
+$('#ivSave').onclick=()=>{
+  const results={};document.querySelectorAll('#ivResults input:checked').forEach(r=>{results[r.name.slice(2)]=r.value;});
+  const v={id:uid(),at:Date.now(),date:$('#ivDate').value||new Date().toISOString().slice(0,10),app:$('#ivApp').value,role:$('#ivRole').value,
+    source:$('#ivSource').value.trim(),who:$('#ivWho').value.trim(),results,quote:$('#ivQuote').value.trim(),newA:$('#ivNew').value.trim()};
+  if(!v.source){toast('Add where you found this person, so the tool can count sources.');$('#ivSource').focus();return;}
+  S.interviews.push(v);save();['#ivSource','#ivWho','#ivQuote','#ivNew'].forEach(k=>$(k).value='');renderComputed();toast('Interview saved.');};
+$('#ivCsv').onclick=()=>{const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const cols=['Date','Business model','Role','Where you found them','Who','Hypothesis','Result','Quote','New'];
+  const rows=[];(S.interviews||[]).forEach(v=>{const m=S.apps.find(a=>a.id===v.app);const ent=Object.entries(v.results||{});
+    (ent.length?ent:[['','']]).forEach(([id,r])=>{const s=S.assumptions.find(x=>x.id===id);
+      rows.push([v.date,m?appLabel(m,appIndex(m.id)):'',ROLES[v.role]?ROLES[v.role].name:v.role,v.source,v.who,s?hypSentence(s.h):'',r==='nodata'?'No data':r,v.quote,v.newA].map(q).join(','));});});
+  download('leap-to-evidence-interviews.csv',[cols.map(q).join(','),...rows].join('\n'),'text/csv');toast('Downloaded.');};
+$('#ivMerge').onclick=()=>$('#mergeIn').click();
+$('#mergeIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);const have=new Set(S.interviews.map(v=>v.id));let n=0;
+    (d.interviews||[]).forEach(v=>{if(!have.has(v.id)){S.interviews.push(v);n++;}});save();renderComputed();toast(n?`Added ${n} interview${n>1?'s':''}.`:'No new interviews in that file.');}
+    catch(err){toast("That file doesn't look like saved work from this tool.");}};r.readAsText(f);e.target.value='';};
 $('#loadExample').onclick=()=>{if(S.assumptions.length&&!confirm('Replace your work with the example? Download your work first if you want to keep it.'))return;S=migrate(example());save();renderAll();toast('Example loaded.');};
 $('#clearAll').onclick=()=>{if(confirm('Clear everything and start over? Download your work first if you want to keep it.')){S=blank();save();renderAll();}};
 renderAll();
