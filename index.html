@@ -139,7 +139,28 @@ summary{cursor:pointer;font-family:var(--disp);font-weight:600;font-size:14px}
 .plan .empty{color:#51617C;font-style:italic}
 .plan .meta{font-family:var(--mono);font-size:11px;color:#51617C}
 footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
+#onepager{display:none}
+.onepager{font-size:12px;line-height:1.5}
+.optable{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:11.5px}
+.optable th,.optable td{border:1px solid #D3DAE4;padding:4px 7px;text-align:left;vertical-align:top}
+.optable thead th{background:#EFF3F8;font-family:var(--disp);font-size:10.5px;letter-spacing:.04em}
+.optable tbody th{font-family:var(--disp);font-size:11px;width:22%}
+.optable .small{font-family:var(--mono);font-size:9.5px;color:#51617C;margin-top:2px}
+.optable .view{white-space:nowrap;font-family:var(--disp);font-size:10px;line-height:1.55}
+.optable .notes{width:22%}
+.blankline{display:block;border-bottom:1px solid #D3DAE4;height:26px}
+.namesbox{border:1px solid #D3DAE4;height:56px;border-radius:4px}
 @media print{
+  body.print-onepager #plan{display:none !important}
+  body.print-onepager .shell{padding-bottom:0}
+  body.print-onepager .cols{gap:0}
+  body.print-onepager #onepager{display:block !important;border:none;box-shadow:none;padding:0}
+  @page{margin:10mm}
+  body.print-onepager #onepager{font-size:11px}
+  body.print-onepager #onepager h1{font-size:17px;margin:2px 0 4px}
+  body.print-onepager #onepager h2{margin:12px 0 6px}
+  body.print-onepager #onepager .phead{padding-bottom:8px;margin-bottom:8px}
+  body.print-onepager #onepager p{margin:4px 0 6px}
   body{background:#fff}
   .formcol,header.masthead,.previewlabel,footer,.toolbar{display:none !important}
   .cols{display:block}.previewcol{position:static;max-height:none;overflow:visible}
@@ -224,13 +245,14 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <div id="planCardsWrap"><span class="lbl">Hypotheses to test</span>
   <div id="planCards"></div></div>
   <div id="stopWrap"><h3>When to stop</h3>
-  <p class="hint">In qualitative research, interviews with similar people stop producing new issues after 9 to 17 interviews, and understanding those issues in depth takes more interviews (Hennink, Kaiser and Marconi, 2017; Hennink and Kaiser, 2022). Count only interviews with the same kind of person, recruited from different places.</p>
+  <p class="hint">In qualitative research, interviews with similar people stop producing new issues after 9 to 17 interviews, and understanding those issues in depth takes more interviews (Hennink, Kaiser and Marconi, 2017; Hennink and Kaiser, 2022). Count only interviews with people who match the customer in this business model and play the role you chose above. For example, coffee shop owners who handle their own invoices, interviewed as end users; their bookkeepers count separately. Recruit them from different places.</p>
   <div class="row">
     <div class="field"><label for="stopN">Interviews since your last revision</label><input type="number" id="stopN" min="3" max="40" data-bind="stopN"></div>
     <div class="field"><label for="stopK">From at least this many different sources</label><input type="number" id="stopK" min="1" max="10" data-bind="stopK"></div>
   </div></div>
   <div class="toolbar">
     <button class="primary" type="button" id="printPlan">Print or save as PDF</button>
+    <button class="primary" type="button" id="printOnePager" hidden>Print the advisor's one-pager</button>
     <button type="button" id="exportJson">Download my work</button>
     <button type="button" id="importJson">Load saved work</button>
     <button type="button" id="exportCsv">Cards as spreadsheet</button>
@@ -245,6 +267,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 <div class="previewcol">
   <div class="previewlabel">Your plan</div>
   <article class="plan" id="plan"></article>
+  <article class="plan onepager" id="onepager"></article>
 </div>
 </div>
 
@@ -554,7 +577,7 @@ function renderPlanControls(){
   const pr=$('#planRole');pr.innerHTML=Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');
   pr.value=S.plan.role;$('#roleHint').textContent=ROLES[S.plan.role].hint;
   const box=$('#planCards');box.innerHTML='';
-  const adv=S.plan.role==='advisor';$('#planCardsWrap').hidden=adv;$('#stopWrap').hidden=adv;
+  const adv=S.plan.role==='advisor';$('#printOnePager').hidden=!adv;$('#planCardsWrap').hidden=adv;$('#stopWrap').hidden=adv;
   const list=ranked().filter(x=>x.s.status==='now'&&!NOT_BY_INTERVIEW[x.s.box]&&aps(x.s).includes(S.plan.app));
   if(!list.length){box.innerHTML='<p class="hint">Hypotheses for this business model appear here once you fill in step 04.</p>';}
   list.forEach(x=>{
@@ -647,7 +670,33 @@ function renderPlan(){
     <ul><li>Mark each hypothesis <b>supports</b>, <b>contradicts</b> or <b>no data</b>, and note the quote behind each mark.</li>
       <li>Write down anything you learned that your answers in step 02 don't cover, and add it there as a new answer.</li>
       <li>If an interview contradicts a hypothesis, revise the hypothesis or narrow who it covers. The count starts over at that revision.</li>
-      <li>You have enough evidence to decide when a hypothesis lasts ${esc(S.stopN)} interviews in a row with this kind of person, from ${esc(S.stopK)}+ different sources, with no revision.</li></ul>`;
+      <li>You have enough evidence to decide when a hypothesis lasts ${esc(S.stopN)} interviews in a row with ${esc(who.toLowerCase().startsWith('(')?'this customer':who.charAt(0).toLowerCase()+who.slice(1))}, in the role of ${esc(role.name.toLowerCase())}, from ${esc(S.stopK)}+ different sources, with no revision.</li></ul>`;
+}
+
+/* ---------- advisor one-pager (the advisor's copy) ---------- */
+function renderOnePager(){
+  const models=S.apps.slice(0,3);
+  const rows=[['segment','Customer'],['problem','Problem'],['alternatives','What they do now'],['uvp','Why they would choose us']];
+  const top=ranked().filter(x=>x.s.status==='now'||x.s.status==='later').slice(0,5);
+  const blank='<span class="blankline"></span>';
+  $('#onepager').innerHTML=`<div class="phead"><div class="peye">Leap to Evidence · For our advisor</div>
+      <h1>${esc(S.idea.trim()||'Our idea')}</h1>
+      <div class="meta">Date ____________ · Advisor ______________________</div></div>
+    <p>Thank you for your time. We'd like your view on which of our assumptions are riskiest, so we test the right things first.</p>
+    <h2>Our business models</h2>
+    <table class="optable"><thead><tr><th></th>${models.map((m,i)=>`<th>Business model ${i+1}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(([b,l])=>`<tr><th>${l}</th>${models.map(m=>`<td>${esc(firstAnswer(m,b))||'<span class="empty">Not known yet</span>'}</td>`).join('')}</tr>`).join('')}</tbody></table>
+    <h2>Our riskiest assumptions, in the order we plan to test them</h2>
+    <table class="optable"><thead><tr><th>#</th><th>Assumption</th><th>Based on</th><th>Your view</th><th>Notes</th></tr></thead>
+      <tbody>${top.length?top.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(aText(x.s))}<div class="small">${esc(BOX[x.s.box].name)}</div></td><td>${esc(EVID[x.s.evidence].label)}</td>
+        <td class="view">☐ Riskier &nbsp; ☐ About right &nbsp; ☐ Less risky</td><td class="notes"></td></tr>`).join('')
+        :'<tr><td colspan="5" class="empty">Add answers in step 02 to fill this table.</td></tr>'}</tbody></table>
+    <h2>Questions</h2>
+    <ol class="qs"><li>What do you consider the riskiest part of this plan?${blank}</li>
+      <li>Have you faced a similar risk before? What happened?${blank}</li>
+      <li>How would you test the riskiest one?${blank}</li></ol>
+    <h2>People we should talk to</h2>
+    <div class="namesbox"></div>`;
 }
 
 /* ---------- wiring ---------- */
@@ -659,6 +708,8 @@ $('#planApp').onchange=e=>{S.plan.app=e.target.value;S.plan.cards=[];save();rend
 $('#planRole').onchange=e=>{S.plan.role=e.target.value;save();renderPlanControls();renderPlan();};
 ['stopN','stopK'].forEach(k=>$('#'+k).addEventListener('input',e=>{const v=parseInt(e.target.value,10);if(v>0){S[k]=v;save();renderPlan();}}));
 $('#printPlan').onclick=()=>window.print();
+$('#printOnePager').onclick=()=>{renderOnePager();document.body.classList.add('print-onepager');window.print();};
+window.addEventListener('afterprint',()=>document.body.classList.remove('print-onepager'));
 function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 $('#exportJson').onclick=()=>{download('leap-to-evidence.json',JSON.stringify(S,null,2),'application/json');toast('Downloaded.');};
 $('#importJson').onclick=()=>$('#fileIn').click();
