@@ -164,7 +164,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 <!-- 2. Assumptions -->
 <section class="card" id="s2">
   <h2><span class="n">02</span>List your assumptions</h2>
-  <p class="lede">An assumption is anything your business needs to be true that you haven't checked yet. Go box by box. Write fast; you can fix wording later.</p>
+  <p class="lede">An assumption is anything your business needs to be true. List them all, even the ones you feel sure about; each one gets an evidence rating below. Go box by box. Write fast; you can fix wording later.</p>
   <p class="hint">Rate each assumption honestly. <b>Leap of faith:</b> gut instinct. <b>Anecdote:</b> you heard it from a few people or saw it once. <b>Fact:</b> you have data from real behavior. Gut instinct is fine; just label it.</p>
   <div id="assumptions"></div>
   <button class="add" type="button" id="addAssumption">+ Add an assumption</button>
@@ -341,8 +341,9 @@ function renderStart(){
       </div>
       <div class="row">
         <div class="field"><label>What they use now</label><textarea data-k="now" placeholder="Paper files, a spreadsheet, their bookkeeper"></textarea></div>
-        <div class="field"><label>The part of their life or work this is about</label><textarea data-k="topic" placeholder="paying suppliers"></textarea></div>
-      </div>`;
+        <div class="field"><label>The everyday activity this problem is part of</label><textarea data-k="topic" placeholder="paying suppliers"></textarea></div>
+      </div>
+      <p class="hint" style="margin:4px 0 0">For the everyday activity, name it in the customer's terms, not as your problem. For example, "paying suppliers," not "matching invoices by hand."</p>`;
     d.querySelectorAll('textarea').forEach(t=>{t.value=a[t.dataset.k];t.addEventListener('input',()=>{a[t.dataset.k]=t.value;grow(t);save();renderComputed();});});
     const x=d.querySelector('.x');if(x)x.onclick=()=>{S.apps.splice(i,1);S.assumptions.forEach(s=>{s.apps=(s.apps||[]).filter(id=>id!==a.id);});save();renderAll();};
     box.appendChild(d);
