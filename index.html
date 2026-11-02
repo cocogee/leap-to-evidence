@@ -124,6 +124,11 @@ input[type=date]{width:100%;font-family:var(--disp);font-size:14.5px;color:var(-
 .ivq{font-style:italic;font-size:14px;color:var(--ink2);margin:6px 0 0}
 .gate{font-family:var(--disp);letter-spacing:0;text-transform:none;font-size:12.5px;color:var(--blue);margin-left:6px}
 .gate.ready{color:var(--ok);font-weight:600}
+.signs{display:grid;gap:0 18px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin:4px 0 8px}
+.signs .check{margin:6px 0}
+.champlist{margin:6px 0 4px;padding-left:20px;font-size:14.5px}
+.champlist li{margin:4px 0}
+.champtag{color:var(--ok);font-weight:600}
 .warn{font-family:var(--disp);font-size:13.5px;color:var(--accent);margin:4px 0}
 .okmsg{font-family:var(--disp);font-size:13.5px;color:var(--ok);margin:4px 0}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:12px 0;line-height:1.6}
@@ -299,6 +304,15 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <div class="field"><label for="ivWho">Who (initials or a short note; no full names)</label><input type="text" id="ivWho" placeholder="J.R., owner of two cafes"></div>
   <span class="lbl">What this interview showed</span>
   <div id="ivResults"></div>
+  <span class="lbl">Signs this person could become a champion</span>
+  <div class="signs" id="ivSigns">
+    <label class="check"><input type="checkbox" value="has"><span>Has the problem</span></label>
+    <label class="check"><input type="checkbox" value="knows"><span>Knows they have it</span></label>
+    <label class="check"><input type="checkbox" value="looking"><span>Is actively looking for a solution</span></label>
+    <label class="check"><input type="checkbox" value="workaround"><span>Has put together their own workaround</span></label>
+    <label class="check"><input type="checkbox" value="budget"><span>Has or can get a budget for it</span></label>
+  </div>
+  <p class="hint" style="margin-top:0">Adapted from Steve Blank's "earlyvangelists." Four or more signs: the tool adds them to your list of possible champions below.</p>
   <div class="field"><label for="ivQuote">The quote that mattered most</label><textarea id="ivQuote" placeholder="Their exact words"></textarea></div>
   <div class="field"><label for="ivNew">Anything new your answers in step 02 don't cover</label><textarea id="ivNew" placeholder="Add it in step 02 as a new answer"></textarea></div>
   <div class="toolbar">
@@ -308,6 +322,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
     <button type="button" id="ivMerge">Add a teammate's interviews</button>
     <input type="file" id="mergeIn" accept="application/json" hidden>
   </div>
+  <div id="champs"></div>
   <ul class="ivlist" id="ivList"></ul>
 </section>
 
@@ -670,12 +685,14 @@ function renderLog(){
   renderLogForm();
   const ivs=S.interviews||[];
   $('#ivCount').textContent=ivs.length;
+  const champs=ivs.filter(v=>(v.signs||[]).length>=4);
+  $('#champs').innerHTML=champs.length?`<h3>Possible champions</h3><p class="hint">People showing four or more signs. Keep in touch with them; they're where to start when you look for design partners.</p><ul class="champlist">${champs.map(v=>{const m=S.apps.find(a=>a.id===v.app);return `<li><b>${esc(v.who||'No name noted')}</b> · ${esc(v.date||'')} · ${esc(m?appShort(m,appIndex(m.id)):'')} · ${(v.signs||[]).length} of 5 signs</li>`;}).join('')}</ul>`:'';
   const ul=$('#ivList');ul.innerHTML='';
   if(!ivs.length){ul.innerHTML='<li class="hint">No interviews logged yet.</li>';return;}
   ivs.slice().sort((a,b)=>b.at-a.at).forEach(v=>{
     const m=S.apps.find(a=>a.id===v.app);const li=document.createElement('li');
     const res=Object.entries(v.results||{}).filter(([,r])=>r!=='nodata');
-    li.innerHTML=`<div class="ivmeta"><b>${esc(v.date||'')}</b> · ${esc(m?appShort(m,appIndex(m.id)):'Deleted business model')} · ${esc(ROLES[v.role]?ROLES[v.role].name:v.role)} · ${esc(v.source||'no source')}${v.who?' · '+esc(v.who):''}</div>
+    li.innerHTML=`<div class="ivmeta"><b>${esc(v.date||'')}</b> · ${esc(m?appShort(m,appIndex(m.id)):'Deleted business model')} · ${esc(ROLES[v.role]?ROLES[v.role].name:v.role)} · ${esc(v.source||'no source')}${v.who?' · '+esc(v.who):''}${(v.signs||[]).length>=4?' · <span class="champtag">Possible champion</span>':''}</div>
       <div class="ivres">${res.length?res.map(([id,r])=>{const s=S.assumptions.find(x=>x.id===id);return `<span class="chip ${r==='supports'?'done':'stop'}">${r==='supports'?'Supports':'Contradicts'}: ${esc(s?cut((s.h.what||'').trim()||aText(s),60):'deleted')}</span>`;}).join(''):'<span class="hint">No hypothesis results recorded.</span>'}</div>
       ${v.quote?`<p class="ivq">"${esc(v.quote)}"</p>`:''}<button class="x small" type="button" title="Delete this interview">×</button>`;
     li.querySelector('.x').onclick=()=>{if(!confirm('Delete this interview from the log?'))return;S.interviews=S.interviews.filter(x=>x!==v);save();renderComputed();};
@@ -775,6 +792,8 @@ function renderPlan(){
     <ol><li class="say">"Is there anything about ${esc(topic)} I should have asked but didn't?"</li>
       <li class="say">"Who do you know who handles this differently?"</li>
       <li class="say">"Is there anyone else you think I should talk to? Would you be willing to introduce me?"</li>
+      <li class="say">"Once we've finished these conversations, can I send you a short summary of what we learned?"</li>
+      <li class="say">"If we build something to help with this, would you want to try an early version?"</li>
       <li class="say">"Could I follow up if I have another question?"</li></ol>
     <h2>During the interview</h2>
     <ul><li>Ask one question at a time, then stop talking. When you stay quiet, people often keep going and add the details you need.</li>
@@ -783,7 +802,8 @@ function renderPlan(){
       <li>Every so often, sum up what you heard in their words and let them correct you.</li>
       <li>Compliments and promises about the future ("I'd definitely use that") don't count as evidence.</li></ul>
     <h2>Right after</h2>
-    <ul><li>Mark each hypothesis <b>supports</b>, <b>contradicts</b> or <b>no data</b>, and note the quote behind each mark.</li>
+    <ul><li>Log the interview in step 06: mark each hypothesis <b>supports</b>, <b>contradicts</b> or <b>no data</b>, and note the quote behind each mark.</li>
+      <li>Send a thank-you message within a day. When you send the summary you promised, tell them one thing you learned from them.</li>
       <li>Write down anything you learned that your answers in step 02 don't cover, and add it there as a new answer.</li>
       <li>If an interview contradicts a hypothesis, revise the hypothesis or narrow who it covers. The count starts over at that revision.</li>
       <li>You have enough evidence to decide when a hypothesis lasts ${esc(S.stopN)} interviews in a row with ${esc(who.toLowerCase().startsWith('(')?'this customer':who.charAt(0).toLowerCase()+who.slice(1))}, in the role of ${esc(role.name.toLowerCase())}, from ${esc(S.stopK)}+ different sources, with no revision.</li></ul>`;
@@ -848,14 +868,14 @@ $('#exportCsv').onclick=()=>{
 $('#ivSave').onclick=()=>{
   const results={};document.querySelectorAll('#ivResults input:checked').forEach(r=>{results[r.name.slice(2)]=r.value;});
   const v={id:uid(),at:Date.now(),date:$('#ivDate').value||new Date().toISOString().slice(0,10),app:$('#ivApp').value,role:$('#ivRole').value,
-    source:$('#ivSource').value.trim(),who:$('#ivWho').value.trim(),results,quote:$('#ivQuote').value.trim(),newA:$('#ivNew').value.trim()};
+    source:$('#ivSource').value.trim(),who:$('#ivWho').value.trim(),results,signs:[...document.querySelectorAll('#ivSigns input:checked')].map(c=>c.value),quote:$('#ivQuote').value.trim(),newA:$('#ivNew').value.trim()};
   if(!v.source){toast('Add where you found this person, so the tool can count sources.');$('#ivSource').focus();return;}
-  S.interviews.push(v);save();['#ivSource','#ivWho','#ivQuote','#ivNew'].forEach(k=>$(k).value='');renderComputed();toast('Interview saved.');};
+  S.interviews.push(v);save();['#ivSource','#ivWho','#ivQuote','#ivNew'].forEach(k=>$(k).value='');document.querySelectorAll('#ivSigns input').forEach(c=>c.checked=false);renderComputed();toast('Interview saved.');};
 $('#ivCsv').onclick=()=>{const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
-  const cols=['Date','Business model','Role','Where you found them','Who','Hypothesis','Result','Quote','New'];
+  const cols=['Date','Business model','Role','Where you found them','Who','Champion signs (of 5)','Hypothesis','Result','Quote','New'];
   const rows=[];(S.interviews||[]).forEach(v=>{const m=S.apps.find(a=>a.id===v.app);const ent=Object.entries(v.results||{});
     (ent.length?ent:[['','']]).forEach(([id,r])=>{const s=S.assumptions.find(x=>x.id===id);
-      rows.push([v.date,m?appLabel(m,appIndex(m.id)):'',ROLES[v.role]?ROLES[v.role].name:v.role,v.source,v.who,s?hypSentence(s.h):'',r==='nodata'?'No data':r,v.quote,v.newA].map(q).join(','));});});
+      rows.push([v.date,m?appLabel(m,appIndex(m.id)):'',ROLES[v.role]?ROLES[v.role].name:v.role,v.source,v.who,(v.signs||[]).length,s?hypSentence(s.h):'',r==='nodata'?'No data':r,v.quote,v.newA].map(q).join(','));});});
   download('leap-to-evidence-interviews.csv',[cols.map(q).join(','),...rows].join('\n'),'text/csv');toast('Downloaded.');};
 $('#ivMerge').onclick=()=>$('#mergeIn').click();
 $('#mergeIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
