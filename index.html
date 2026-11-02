@@ -745,7 +745,7 @@ function renderPlan(){
     return;
   }
   const cards=S.plan.cards.map(id=>S.assumptions.find(s=>s.id===id)).filter(s=>s&&(s.h.what||'').trim()&&aps(s).includes(S.plan.app));
-  const topic=(app&&app.topic.trim())||'this part of your work';
+  const topic=(app&&(app.topic||'').trim())||'[the everyday activity from step 02]';
   const who=(app&&app.who.trim())||'(who has the problem: fill in step 01)';
   el.innerHTML=`${head('Interview plan')}
       <div class="meta">${esc(role.name)} · ${cards.length} hypothes${cards.length===1?'is':'es'} · stop after ${esc(S.stopN)} interviews from ${esc(S.stopK)}+ sources</div></div>
@@ -756,11 +756,11 @@ function renderPlan(){
     <ul><li>If you can, bring a second person to take notes. Write down people's exact words.</li>
       <li>You're there to learn about their life. Don't mention your product or technology at all; once people hear your idea, they tend to tell you what you want to hear.</li></ul>
     <h2>Opening</h2>
-    <ol><li class="say">"Thanks for taking the time to talk with me. I'm trying to understand you and how ${esc(topic)} works for you. There are no right or wrong answers; I just want to learn from your experience."</li>
+    <ol><li class="say">"Thanks for taking the time to talk with me. I'm trying to understand you and how you handle ${esc(topic)}. There are no right or wrong answers; I just want to learn from your experience."</li>
       <li class="say">"Is it okay if I record this so I can listen instead of writing everything down? You can ask me to stop at any time."</li>
       <li class="listen">Get their yes on the recording itself.</li></ol>
     <h2>Start broad</h2>
-    <ol><li class="say">"To start, could you walk me through how ${esc(topic)} works for you, from start to finish?"</li>
+    <ol><li class="say">"To start, can you walk me through how you handle ${esc(topic)}, from start to finish?"</li>
       <li class="listen">Let them talk without interrupting. Note anything surprising; a surprise can point to an assumption you haven't listed.</li></ol>
     ${cards.length?(seen=>cards.map((s,i)=>`<h2>Hypothesis ${i+1}</h2>
       <p class="listen">${esc(hypSentence(s.h)||aText(s))}</p>
@@ -771,6 +771,7 @@ function renderPlan(){
     <h2>Closing</h2>
     <ol><li class="say">"Is there anything about ${esc(topic)} I should have asked but didn't?"</li>
       <li class="say">"Who do you know who handles this differently?"</li>
+      <li class="say">"Is there anyone else you think I should talk to? Would you be willing to introduce me?"</li>
       <li class="say">"Could I follow up if I have another question?"</li></ol>
     <h2>During the interview</h2>
     <ul><li>Ask one question at a time, then stop talking. When you stay quiet, people often keep going and add the details you need.</li>
