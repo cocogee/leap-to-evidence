@@ -85,6 +85,14 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .note{margin:12px 0 0;padding:10px 14px;border-left:3px solid var(--accent);background:var(--accent-soft);font-size:14.5px;line-height:1.55;max-width:64ch;border-radius:0 6px 6px 0}
 .note.blue{border-color:var(--blue);background:var(--blue-soft)}
 .note b{font-family:var(--disp);font-weight:600}
+.starter{margin-top:8px;width:auto;max-width:100%;font-size:13.5px;padding:6px 10px;color:var(--ink2);background:transparent}
+.applies{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;margin:4px 0 6px}
+.applies .lbl{margin:0 4px 0 0;font-size:13px}
+.applies .hint{margin:0;font-size:13.5px}
+button.toggle{font-size:12.5px;font-weight:500;padding:5px 12px;border-color:var(--line);color:var(--ink2)}
+button.toggle[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+button.toggle:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.check span{font-family:var(--body);font-weight:400}
 .warn{font-family:var(--disp);font-size:13.5px;color:var(--accent);margin:4px 0}
 .okmsg{font-family:var(--disp);font-size:13.5px;color:var(--ok);margin:4px 0}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:8px 0}
@@ -101,7 +109,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .chip.pivot{border-color:var(--blue);color:var(--blue)}
 .chip.leap{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
 .chip.done{border-color:var(--ok);color:var(--ok)}
-.order .controls{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:8px}
+.order .controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.order .controls select{width:auto}.order .controls input{flex:1 1 220px}
 .waiting{font-size:13.5px;color:var(--blue);font-family:var(--disp);margin:4px 0}
 details{margin:8px 0}
 summary{cursor:pointer;font-family:var(--disp);font-weight:600;font-size:14px}
@@ -134,7 +142,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 <header class="masthead">
   <div class="eyebrow">Leap to Evidence</div>
   <h1 class="title">From assumptions to interviews</h1>
-  <p class="intro">Every new business rests on beliefs nobody has checked yet. This tool helps you list them, decide which to test first, rewrite them so a real conversation could prove them wrong, and walk away knowing who to talk to and what to ask.</p>
+  <p class="intro">Every new business depends on beliefs nobody has checked yet. This tool helps you list those beliefs, decide which to test first, rewrite each one so a single conversation can prove it wrong, and plan who to talk to and what to ask.</p>
   <div class="toolbar"><button type="button" id="loadExample">See a worked example</button></div>
 </header>
 
@@ -144,23 +152,23 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 <!-- 1. Starting point -->
 <section class="card" id="s1">
   <h2><span class="n">01</span>Where your idea started</h2>
-  <p class="lede">Ideas start in different places. Where yours started shapes which assumptions are riskiest.</p>
+  <p class="lede">Where your idea started affects which of its assumptions are riskiest.</p>
   <div class="field"><label for="idea">Your idea in one sentence</label>
     <textarea id="idea" data-bind="idea" placeholder="A low-cost sensor that reads invoice paper and matches it to deliveries."></textarea></div>
   <span class="lbl">It started with...</span>
   <div class="radios" id="start">
     <label><input type="radio" name="start" value="tech"><span><b>A platform technology.</b> We have something that could be used in many ways and are looking for who needs it.</span></label>
     <label><input type="radio" name="start" value="product"><span><b>A product.</b> We've designed, or are building, one specific product.</span></label>
-    <label><input type="radio" name="start" value="problem"><span><b>A problem.</b> We (or people we know) ran into it.</span></label>
-    <label><input type="radio" name="start" value="market"><span><b>A market or opportunity.</b> We were pointed at a market, a trend or a revenue goal.</span></label>
+    <label><input type="radio" name="start" value="problem"><span><b>A problem.</b> We, or people we know, have this problem.</span></label>
+    <label><input type="radio" name="start" value="market"><span><b>A market or opportunity.</b> Someone gave us a market, a trend or a revenue goal to pursue.</span></label>
   </div>
-  <div class="note" id="biasnote" hidden><b>Watch for the Innovator's Bias.</b> When you start from a technology or product, it is easy to write problems that justify it. "When you've already decided to build a hammer, everything looks like a nail" (Ash Maurya). Listing several market opportunities below helps.</div>
+  <div class="note" id="biasnote" hidden><b>Watch for the Innovator's Bias.</b> When you start from a technology or product, it's easy to describe problems that justify building it. "When you've already decided to build a hammer, everything looks like a nail" (Ash Maurya). Listing several market opportunities below is one check on this bias.</div>
 
   <h3>Your market opportunities</h3>
   <p class="hint">A market opportunity is one application for one group of customers. The same product sold to different customers counts as different opportunities: a dog back brace for owners of breeds prone to back problems is one; the same brace for veterinary rehab clinics is another.</p>
   <p class="hint" id="wtpHint" hidden>With a platform technology, finding opportunities is its own step. Use <a href="https://app.wheretoplay.co/" target="_blank" rel="noopener">Where to Play</a> (Marc Gruber and Sharon Tal; free online tool and worksheets) to find and compare them.</p>
   <p class="hint">Enter your main opportunity first, then any others you're keeping open.</p>
-  <p class="hint">The tool uses this list to judge how bad it is if an assumption turns out false. A backup only helps if it doesn't rest on the same assumption, which is how Where to Play defines a backup.</p>
+  <p class="hint">The tool uses this list to judge what happens when an assumption turns out false. A backup opportunity helps only if it doesn't depend on the failed assumption; Where to Play defines backups the same way.</p>
   <div id="apps"></div>
   <button class="add" type="button" id="addApp">+ Add an opportunity</button>
 </section>
@@ -169,7 +177,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 <section class="card" id="s2">
   <h2><span class="n">02</span>List your assumptions</h2>
   <p class="lede">An assumption is anything your business needs to be true that you haven't checked yet. Go box by box. Write fast; you can fix wording later.</p>
-  <p class="hint">Rate each one honestly. <b>Leap of faith:</b> gut instinct. <b>Anecdote:</b> you heard it from a few people or saw it once. <b>Fact:</b> you have data from real behavior. Gut instinct is fine; just label it.</p>
+  <p class="hint">Rate each assumption honestly. <b>Leap of faith:</b> gut instinct. <b>Anecdote:</b> you heard it from a few people or saw it once. <b>Fact:</b> you have data from real behavior. Gut instinct is fine; just label it.</p>
   <div id="assumptions"></div>
   <button class="add" type="button" id="addAssumption">+ Add an assumption</button>
   <p class="hint" style="margin-top:12px">Sentence starters adapted from David J. Bland's Assumptions Mapping Worksheet (Precoil), which adapts questions from Giff Constable, and from the attractiveness criteria in Gruber and Tal's Where to Play worksheets (CC BY-NC-SA 4.0).</p>
@@ -180,18 +188,19 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <h2><span class="n">03</span>Your testing order</h2>
   <p class="lede">Calculated from your answers, not from how important things feel.</p>
   <details><summary>How the order is calculated</summary>
-    <p class="hint"><b>Consequence.</b> If a technology assumption fails, every opportunity fails: <b>Stop</b>. If a customer or problem assumption fails, the tool checks your other opportunities. If at least one doesn't rest on it: <b>Pivot</b>. If all of them do: <b>Stop</b>. Money assumptions (price, channels, costs) are judged with a money model in stage 2.</p>
-    <p class="hint"><b>Reach.</b> How many of your other assumptions rest on this one. On the canvas, later boxes rest on earlier ones: problems belong to a customer, prices depend on the problem, channels depend on who the customer is.</p>
+    <p class="hint"><b>Consequence.</b> If a technology assumption fails, every opportunity fails: <b>Stop</b>. If a customer or problem assumption fails, the tool checks your other opportunities. If at least one doesn't depend on it: <b>Pivot</b>. If all of them do: <b>Stop</b>. Money assumptions (price, channels, costs) are judged with a money model in stage 2.</p>
+    <p class="hint"><b>Reach.</b> How many of your other assumptions depend on this one. On the canvas, later boxes depend on earlier ones: problems belong to a customer, prices depend on the problem, channels depend on who the customer is.</p>
     <p class="hint"><b>Evidence.</b> Leap-of-faith assumptions go before anecdotes; facts go last.</p>
-    <p class="hint"><b>Earlier links first.</b> If an earlier assumption is still a leap of faith, a "no" on a later one could just mean the earlier one was wrong. So the later one waits. Customer and problem assumptions are tested together, and technology tests run alongside interviews.</p>
+    <p class="hint"><b>Earlier links first.</b> If an earlier assumption is still a leap of faith, a "no" on a later assumption could mean only that the earlier assumption was wrong, so the later assumption waits. Customer and problem assumptions are tested together, and technology tests run alongside interviews.</p>
   </details>
   <ol class="order" id="order"></ol>
+  <div class="note blue"><b>Check this order with an advisor or coach.</b> Before you interview customers, show your canvas and this list to someone with experience in the industry or in starting companies. In step 05, choose "Advisor or coach" for a conversation plan.</div>
 </section>
 
 <!-- 4. Hypotheses -->
 <section class="card" id="s4">
   <h2><span class="n">04</span>Make them testable</h2>
-  <p class="lede">An assumption becomes a hypothesis when it's specific enough that a single conversation could prove it wrong.</p>
+  <p class="lede">An assumption becomes a hypothesis once it's specific enough for a single conversation to prove wrong.</p>
   <p class="hint">Fill in the four parts, then write the sentence. Describe something people <b>already do</b>, not what they feel or would do.</p>
   <div id="hyps"></div>
 </section>
@@ -205,14 +214,14 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
     <div class="field"><label for="planRole">Their role</label><select id="planRole"></select></div>
   </div>
   <p class="hint" id="roleHint"></p>
-  <span class="lbl">Hypotheses to test</span>
-  <div id="planCards"></div>
-  <h3>When to stop</h3>
-  <p class="hint">Qualitative research finds that a similar group of people usually stops turning up new issues somewhere around 9 to 17 interviews, and that understanding those issues in depth takes longer (Hennink, Kaiser and Marconi, 2017). Count only interviews with the same kind of person, recruited from different places.</p>
+  <div id="planCardsWrap"><span class="lbl">Hypotheses to test</span>
+  <div id="planCards"></div></div>
+  <div id="stopWrap"><h3>When to stop</h3>
+  <p class="hint">In qualitative research, interviews with similar people stop producing new issues after 9 to 17 interviews, and understanding those issues in depth takes more interviews (Hennink, Kaiser and Marconi, 2017; Hennink and Kaiser, 2022). Count only interviews with the same kind of person, recruited from different places.</p>
   <div class="row">
     <div class="field"><label for="stopN">Interviews since your last revision</label><input type="number" id="stopN" min="3" max="40" data-bind="stopN"></div>
     <div class="field"><label for="stopK">From at least this many different sources</label><input type="number" id="stopK" min="1" max="10" data-bind="stopK"></div>
-  </div>
+  </div></div>
   <div class="toolbar">
     <button class="primary" type="button" id="printPlan">Print or save as PDF</button>
     <button type="button" id="exportJson">Download my work</button>
@@ -227,7 +236,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 </div>
 
 <div class="previewcol">
-  <div class="previewlabel">Your interview plan</div>
+  <div class="previewlabel">Your plan</div>
   <article class="plan" id="plan"></article>
 </div>
 </div>
@@ -272,11 +281,12 @@ const BOX=Object.fromEntries(BOXES.map(b=>[b.id,b]));
 const EVID={leap:{label:'Leap of faith',w:3},anecdote:{label:'Anecdote',w:2},fact:{label:'Fact',w:1}};
 const STATUS={now:'Test now',later:"Can't test yet",supported:'Supported enough to decide',refuted:'Refuted'};
 const ROLES={
-  user:{name:'End user',hint:'The person who lives with the problem day to day. Best for: the problem, how they handle it now, how often it happens.'},
+  user:{name:'End user',hint:'The person who has the problem day to day. Best for: the problem, how they handle it now, how often it happens.'},
   buyer:{name:'Economic buyer',hint:'The person who controls the money. Best for: budgets, what they pay for now, how purchases get approved.'},
   champion:{name:'Champion',hint:'The person who would push for a purchase inside an organization. Best for: who else is involved and what convinces them.'},
   influencer:{name:'Influencer or advisor',hint:'Someone the buyer listens to (an expert, a consultant, a peer). Best for: what the buyer trusts and checks.'},
-  gatekeeper:{name:'Gatekeeper or regulator',hint:'Someone who can block or slow adoption. Best for: rules, approvals and deal-breakers. Not for the problem itself.'}
+  gatekeeper:{name:'Gatekeeper or regulator',hint:'Someone who can block or slow adoption. Best for: rules, approvals and deal-breakers, not the problem itself.'},
+  advisor:{name:'Advisor or coach (talk to first)',hint:'Best for: checking which of your assumptions are riskiest before you interview customers.'}
 };
 /* Boxes an interview cannot settle in stage 1. */
 const NOT_BY_INTERVIEW={tech:'Whether the technology or product works is settled by a technical test, not an interview.',
@@ -325,6 +335,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px';}
 function toast(m){const t=$('#toast');t.textContent=m;clearTimeout(toast.t);toast.t=setTimeout(()=>t.textContent='',3000);}
 function appLabel(a,i){const name=(a.who||a.problem)?[a.problem||'(problem)',a.who?'for '+a.who:''].join(' ').trim():'Opportunity '+String.fromCharCode(65+i);return name.length>70?name.slice(0,67)+'...':name;}
+function appShort(a,i){const t=(a.who||a.problem||'').trim();return t?(t.length>40?t.slice(0,38).trim()+'...':t):'Opportunity '+String.fromCharCode(65+i);}
 function appIndex(id){return S.apps.findIndex(a=>a.id===id);}
 
 /* ---------- 1. start + applications ---------- */
@@ -361,12 +372,12 @@ function renderAssumptions(){
     d.innerHTML=`<div class="itemhead"><span class="tag">ASSUMPTION ${i+1}</span><button class="x" type="button" title="Remove">×</button></div>
       <div class="row">
         <div class="field"><label>Canvas box</label><select data-k="box">${BOXES.filter(x=>x.id!=='tech'||S.start==='tech'||S.start==='product'||s.box==='tech').map(x=>`<option value="${x.id}">${x.name}</option>`).join('')}</select></div>
+        <div class="field"><label>Based on</label><select data-k="evidence">${Object.entries(EVID).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
       </div>
-      <div class="field"><span class="lbl">Applies to</span>${b.all?'<p class="hint" style="margin:0">Every opportunity (it is about the technology or product itself).</p>':S.apps.map((a,j)=>`<label class="check" style="margin:4px 0"><input type="checkbox" data-app="${a.id}" ${(s.apps||[]).includes(a.id)?'checked':''}><span>${esc(appLabel(a,j))}</span></label>`).join('')}</div>
       <div class="field"><label>We believe that...</label>
-        <select class="starter"><option value="">Pick a sentence starter (optional)</option>${b.starters.map(t=>`<option>${esc(t)}</option>`).join('')}</select>
-        <textarea data-k="text" style="margin-top:8px" placeholder="Finish the sentence"></textarea></div>
-      <div class="field"><label>What it's based on</label><select data-k="evidence">${Object.entries(EVID).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>`;
+        <textarea data-k="text" placeholder="Finish the sentence, or pick a starter below"></textarea>
+        <select class="starter"><option value="">Sentence starters</option>${b.starters.map(t=>`<option>${esc(t)}</option>`).join('')}</select></div>
+      <div class="applies"><span class="lbl">Applies to</span>${b.all?'<span class="hint">every opportunity</span>':S.apps.map((a,j)=>`<button type="button" class="toggle" data-app="${a.id}" aria-pressed="${(s.apps||[]).includes(a.id)}">${esc(appShort(a,j))}</button>`).join('')}</div>`;
     d.querySelectorAll('[data-k]').forEach(el=>{
       el.value=s[el.dataset.k];
       const ev=el.tagName==='TEXTAREA'?'input':'change';
@@ -374,7 +385,7 @@ function renderAssumptions(){
         if(el.dataset.k==='box'){if(!BOX[s.box].all&&!s.apps.length&&S.apps[0])s.apps=[S.apps[0].id];save();renderAssumptions();renderComputed();return;}
         save();renderComputed();});
     });
-    d.querySelectorAll('[data-app]').forEach(cb=>cb.addEventListener('change',()=>{s.apps=cb.checked?[...new Set([...s.apps,cb.dataset.app])]:s.apps.filter(id=>id!==cb.dataset.app);save();renderComputed();}));
+    d.querySelectorAll('[data-app]').forEach(bt=>bt.addEventListener('click',()=>{const on=bt.getAttribute('aria-pressed')!=='true';bt.setAttribute('aria-pressed',on);s.apps=on?[...new Set([...s.apps,bt.dataset.app])]:s.apps.filter(id=>id!==bt.dataset.app);save();renderComputed();}));
     d.querySelector('.starter').addEventListener('change',e=>{if(!e.target.value)return;const t=d.querySelector('[data-k=text]');t.value=e.target.value;s.text=t.value;grow(t);t.focus();save();renderComputed();});
     d.querySelector('.x').onclick=()=>{S.assumptions.splice(i,1);S.plan.cards=S.plan.cards.filter(id=>id!==s.id);save();renderAll();};
     box.appendChild(d);
@@ -389,12 +400,12 @@ function consequence(s){
   if(b.all)return {key:'stop',label:'Stop',why:'Every opportunity depends on the technology or product working.',w:3};
   if(b.gate){
     const mine=aps(s);
-    if(!mine.length)return {key:'later',label:'Pick an opportunity',why:'Check which opportunities this applies to in step 02.',w:1};
+    if(!mine.length)return {key:'later',label:'Pick an opportunity',why:'In step 02, check the opportunities this assumption applies to.',w:1};
     const free=liveApps().filter(a=>!mine.includes(a.id));
-    if(!free.length)return {key:'stop',label:'Stop',why:liveApps().length>1?'Every opportunity you listed rests on this, so none would survive.':'It is your only opportunity, so there is nothing to pivot to yet.',w:3};
-    return {key:'pivot',label:'Pivot',why:`If false, ${free.length===1?'one opportunity does':free.length+' opportunities do'} not rest on it: ${free.map(a=>appLabel(a,appIndex(a.id))).join('; ')}.`,w:2};
+    if(!free.length)return {key:'stop',label:'Stop',why:liveApps().length>1?'Every opportunity you listed depends on this assumption.':"You've listed only one opportunity, so there's nothing to pivot to yet.",w:3};
+    return {key:'pivot',label:'Pivot',why:`Still open if this is false: ${free.map(a=>appShort(a,appIndex(a.id))).join('; ')}.`,w:2};
   }
-  return {key:'later',label:'Judged in stage 2',why:'Money and delivery assumptions are judged with a money model once the customer and problem hold up.',w:1};
+  return {key:'later',label:'Judged in stage 2',why:'Money and delivery assumptions are judged with a money model once the customer and problem assumptions have support.',w:1};
 }
 function reach(s){return S.assumptions.filter(o=>o!==s&&sameChain(s,o)&&BOX[o.box].order>BOX[s.box].order).length;}
 function blocker(s){
@@ -422,7 +433,7 @@ function renderOrder(){
         <span class="chip ${s.evidence==='leap'?'leap':''}">${EVID[s.evidence].label}</span>
         ${done?`<span class="chip done">${STATUS[s.status]}</span>`:''}</div>
       <div class="hint" style="margin:0">${esc(x.c.why)}</div>
-      ${x.bl&&s.status==='now'?`<p class="waiting">Waiting on an earlier link: "${esc(x.bl.text)}" is still a leap of faith. Test that first.</p>`:''}
+      ${x.bl&&s.status==='now'?`<p class="waiting">Waiting for an earlier assumption: "${esc(x.bl.text)}" is still a leap of faith. Test that assumption first.</p>`:''}
       ${NOT_BY_INTERVIEW[s.box]?`<p class="waiting">${NOT_BY_INTERVIEW[s.box]}</p>`:''}
       <div class="controls"><select>${Object.entries(STATUS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
         <input type="text" placeholder="What would make it testable?" ${s.status==='later'?'':'hidden'}></div>`;
@@ -439,9 +450,9 @@ const FEELING=/\b(would|will|want|wants|like|likes|love|interested|frustrat\w*|h
 function hypWarnings(h){
   const w=[];const t=(h.sentence||'').trim();
   if(!t)return w;
-  if(FEELING.test(t))w.push('This sounds like a feeling or a prediction. Rewrite it as something people have already done.');
-  if(/\band\b|\bor\b/i.test(t))w.push('This might hold two claims. If one could be true and the other false, split it into two cards.');
-  if(!h.measure.trim())w.push('Add how much or how often, so you know what would count against it.');
+  if(FEELING.test(t))w.push('This hypothesis reads like a feeling or a prediction. Rewrite it as something people have already done.');
+  if(/\band\b|\bor\b/i.test(t))w.push('This hypothesis may contain two claims. If one can be true while the other is false, split them into two cards.');
+  if(!h.measure.trim())w.push('Add how much or how often, so you know what result counts against the hypothesis.');
   if(!h.who.trim())w.push('Say exactly who. "People" or "businesses" is too broad to find or contradict.');
   return w;
 }
@@ -463,8 +474,8 @@ function renderHyps(){
         <div class="field"><label>When or where</label><textarea data-k="context" placeholder="at the end of each month"></textarea></div>
       </div>
       <div class="field"><label>Your hypothesis, in one sentence</label><textarea data-k="sentence" placeholder="Owners of independent coffee shops spend 2 or more hours a week matching supplier invoices to deliveries by hand."></textarea></div>
-      <div class="field"><label>What would you hear if it's false?</label><textarea data-k="falseIf" placeholder="Someone else does it for them, or it takes a few minutes."></textarea></div>
-      <label class="check"><input type="checkbox" data-k="crux"><span>A single interview could prove this wrong.</span></label>
+      <div class="field"><label>What would you hear if the hypothesis is false?</label><textarea data-k="falseIf" placeholder="Someone else does it for them, or it takes a few minutes."></textarea></div>
+      <label class="check"><input type="checkbox" data-k="crux"><span>A single interview can prove this hypothesis wrong.</span></label>
       <div class="msgs"></div>`;
     const msgs=d.querySelector('.msgs');
     const refresh=()=>{const w=hypWarnings(h);msgs.innerHTML=w.map(m=>`<p class="warn">${esc(m)}</p>`).join('')+(h.sentence&&!w.length&&h.crux?'<p class="okmsg">Ready to test.</p>':'');};
@@ -486,6 +497,7 @@ function renderPlanControls(){
   const pr=$('#planRole');pr.innerHTML=Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');
   pr.value=S.plan.role;$('#roleHint').textContent=ROLES[S.plan.role].hint;
   const box=$('#planCards');box.innerHTML='';
+  const adv=S.plan.role==='advisor';$('#planCardsWrap').hidden=adv;$('#stopWrap').hidden=adv;
   const list=ranked().filter(x=>x.s.status==='now'&&!NOT_BY_INTERVIEW[x.s.box]&&aps(x.s).includes(S.plan.app));
   if(!list.length){box.innerHTML='<p class="hint">Hypotheses for this opportunity appear here once you fill in step 04.</p>';}
   list.forEach(x=>{
@@ -511,47 +523,74 @@ function cardQuestions(s){
 }
 function renderPlan(){
   const app=S.apps.find(a=>a.id===S.plan.app);const role=ROLES[S.plan.role];
+  const el=$('#plan');
+  const head=(sub)=>`<div class="phead"><div class="peye">Leap to Evidence · ${sub}</div><h1>${esc(S.idea.trim()||'Your idea')}</h1>`;
+  if(S.plan.role==='advisor'){
+    const top=ranked().filter(x=>x.s.status==='now'||x.s.status==='later').slice(0,5);
+    el.innerHTML=`${head('Advisor conversation')}<div class="meta">Advisor or coach · before customer interviews</div></div>
+    <h2>Why talk to an advisor first</h2>
+    <p>An experienced advisor can point out risks in the whole plan that customers can't see. You're asking for their judgment on your risks, not their approval of your idea.</p>
+    <h2>Who to talk to</h2>
+    <p>Your course coach, a founder who has sold to these customers, or someone who works in the industry.</p>
+    <h2>Before you start</h2>
+    <ul><li>Bring your canvas and your testing order on one page. Skip the pitch deck.</li>
+      <li>Plan to spend about a fifth of the time walking through your plan and the rest listening.</li></ul>
+    <h2>Walk them through your plan</h2>
+    <p>Show the canvas one box at a time, starting with the customer and the problem. Then show your current top five:</p>
+    ${top.length?`<ol>${top.map(x=>`<li>${esc(x.s.text)} <span class="listen">(${esc(BOX[x.s.box].name)}; ${esc(EVID[x.s.evidence].label.toLowerCase())})</span></li>`).join('')}</ol>`:'<p class="empty">Your top assumptions appear here once you list them in step 02.</p>'}
+    <h2>Questions</h2>
+    <ol><li class="say">"What do you consider the riskiest part of this plan?"</li>
+      <li class="say">"Which of these assumptions would you rank differently, and why?"</li>
+      <li class="say">"Have you faced a similar risk before? What happened?"</li>
+      <li class="say">"How would you test the riskiest one?"</li>
+      <li class="say">"Who else should I talk to?"</li></ol>
+    <p class="listen">The first, third, fourth and fifth questions come from Ash Maurya, <i>Running Lean</i>, chapter 4.</p>
+    <h2>Right after</h2>
+    <ul><li>Treat the advice as information about risk, not as a verdict. As Maurya quotes Venture Hacks: "Hire advisors for good advice but don't follow it, apply it."</li>
+      <li>If the advisor named a risk you haven't listed, add it in step 02 as a new assumption.</li>
+      <li>If the advisor ranked an assumption higher than the tool did, ask yourself what loss they foresee. Then check the evidence rating and the opportunities the assumption applies to; the tool's order updates from those answers.</li>
+      <li>Write down every name the advisor gave you. Those names are your first interviewees.</li></ul>`;
+    return;
+  }
   const cards=S.plan.cards.map(id=>S.assumptions.find(s=>s.id===id)).filter(s=>s&&s.h.behavior.trim()&&aps(s).includes(S.plan.app));
   const topic=(app&&app.topic.trim())||'this part of your work';
   const who=(app&&app.who.trim())||'(who has the problem: fill in step 01)';
-  const el=$('#plan');
-  el.innerHTML=`<div class="phead"><div class="peye">Leap to Evidence · Interview plan</div>
-      <h1>${esc(S.idea.trim()||'Your idea')}</h1>
+  el.innerHTML=`${head('Interview plan')}
       <div class="meta">${esc(role.name)} · ${cards.length} hypothes${cards.length===1?'is':'es'} · stop after ${esc(S.stopN)} interviews from ${esc(S.stopK)}+ sources</div></div>
     <h2>Who to talk to</h2>
     <p><b>${esc(who)}</b>, in the role of <b>${esc(role.name.toLowerCase())}</b>. ${esc(role.hint)}</p>
-    <p>Recruit from at least ${esc(S.stopK)} different places (communities, channels, introductions). People from one source tend to think alike, and the people who would prove you wrong may not be in it. Log where each person came from.</p>
+    <p>Recruit from at least ${esc(S.stopK)} different places, such as communities, channels and introductions. People from one source tend to think alike, and the people who would prove you wrong may not be in that source. Log where each person came from.</p>
     <h2>Before you start</h2>
-    <ul><li>Bring a second person to take notes, if you can. Write down their exact words.</li>
-      <li>You are here to learn about their life, not to talk about your idea. Save any mention of your product for the very end, or skip it.</li></ul>
+    <ul><li>If you can, bring a second person to take notes. Write down people's exact words.</li>
+      <li>You're there to learn about their life, not to talk about your idea. Save any mention of your product for the very end, or skip it.</li></ul>
     <h2>Opening</h2>
     <ol><li class="say">"Thanks for making time. I'm trying to understand how ${esc(topic)} works for people like you. I'm not selling anything today."</li>
       <li class="say">"Is it okay if I record this so I can listen instead of writing everything down? You can ask me to stop at any time."</li>
-      <li class="listen">Get the yes on the recording itself.</li></ol>
+      <li class="listen">Get their yes on the recording itself.</li></ol>
     <h2>Start broad</h2>
     <ol><li class="say">"To start, could you walk me through how ${esc(topic)} works for you, from start to finish?"</li>
-      <li class="listen">Let them talk. Don't interrupt. Note anything surprising: it may be an assumption you haven't listed.</li></ol>
+      <li class="listen">Let them talk without interrupting. Note anything surprising; a surprise can point to an assumption you haven't listed.</li></ol>
     ${cards.length?(seen=>cards.map((s,i)=>`<h2>Hypothesis ${i+1}</h2>
       <p class="listen">${esc(s.h.sentence||s.text)}</p>
       <ol>${cardQuestions(s).filter(q=>!seen.has(q)&&seen.add(q)).map(q=>`<li class="say">"${esc(q)}"</li>`).join('')}</ol>
-      ${s.h.measure.trim()?`<p class="listen">Listen for: ${esc(s.h.measure)}. If it doesn't come up in the story, ask them to estimate it for that specific time, after they've told it.</p>`:''}
-      ${s.h.falseIf.trim()?`<p class="listen">Counts against it: ${esc(s.h.falseIf)}</p>`:''}`).join(''))(new Set())
+      ${s.h.measure.trim()?`<p class="listen">Listen for: ${esc(s.h.measure)}. If the story doesn't include this number, ask for an estimate for that specific time once they've finished the story.</p>`:''}
+      ${s.h.falseIf.trim()?`<p class="listen">Counts against the hypothesis: ${esc(s.h.falseIf)}</p>`:''}`).join(''))(new Set())
       :'<p class="empty">Pick hypotheses in step 05 to add their questions here.</p>'}
     <h2>Closing</h2>
     <ol><li class="say">"Is there anything about ${esc(topic)} I should have asked but didn't?"</li>
       <li class="say">"Who do you know who handles this differently?"</li>
       <li class="say">"Could I follow up if I have another question?"</li></ol>
     <h2>During the interview</h2>
-    <ul><li>Ask one question at a time. Then stop talking. Silence gives them room to add the useful part.</li>
-      <li>If they say "usually," "always" or "I would," bring them back to the last specific time.</li>
+    <ul><li>Ask one question at a time, then stop talking. When you stay quiet, people often keep going and add the details you need.</li>
+      <li>If they say "usually," "always" or "I would," ask again about the last specific time.</li>
       <li>Don't suggest answers or agree with them. "What happened?" works better than "That must have been frustrating?"</li>
       <li>Every so often, sum up what you heard in their words and let them correct you.</li>
       <li>Compliments and promises about the future ("I'd definitely use that") don't count as evidence.</li></ul>
     <h2>Right after</h2>
-    <ul><li>For each hypothesis, mark it: <b>supports</b>, <b>contradicts</b>, or <b>no data</b>. Note the quote that decided it.</li>
-      <li>Write down anything new you learned that your canvas doesn't cover. Add it as a new assumption.</li>
-      <li>If an interview contradicts a hypothesis, revise it, or narrow who it applies to. The count starts over from that revision.</li>
-      <li>You have enough to decide when a hypothesis survives ${esc(S.stopN)} interviews in a row with this kind of person, from ${esc(S.stopK)}+ different sources, without needing a change.</li></ul>`;
+    <ul><li>Mark each hypothesis <b>supports</b>, <b>contradicts</b> or <b>no data</b>, and note the quote behind each mark.</li>
+      <li>Write down anything you learned that your canvas doesn't cover, and add it in step 02 as a new assumption.</li>
+      <li>If an interview contradicts a hypothesis, revise the hypothesis or narrow who it covers. The count starts over at that revision.</li>
+      <li>You have enough evidence to decide when a hypothesis lasts ${esc(S.stopN)} interviews in a row with this kind of person, from ${esc(S.stopK)}+ different sources, with no revision.</li></ul>`;
 }
 
 /* ---------- wiring ---------- */
@@ -564,7 +603,7 @@ $('#addAssumption').onclick=()=>{const a=newAssumption();if((S.start==='tech'||S
   a.apps=BOX[a.box].all?[]:(S.apps[0]?[S.apps[0].id]:[]);S.assumptions.push(a);save();renderAssumptions();renderComputed();
   const t=document.querySelectorAll('#assumptions textarea');if(t.length)t[t.length-1].focus();};
 $('#planApp').onchange=e=>{S.plan.app=e.target.value;S.plan.cards=[];save();renderPlanControls();renderPlan();};
-$('#planRole').onchange=e=>{S.plan.role=e.target.value;save();$('#roleHint').textContent=ROLES[S.plan.role].hint;renderPlan();};
+$('#planRole').onchange=e=>{S.plan.role=e.target.value;save();renderPlanControls();renderPlan();};
 ['stopN','stopK'].forEach(k=>$('#'+k).addEventListener('input',e=>{const v=parseInt(e.target.value,10);if(v>0){S[k]=v;save();renderPlan();}}));
 $('#printPlan').onclick=()=>window.print();
 function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
