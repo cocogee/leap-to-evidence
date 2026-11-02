@@ -121,6 +121,8 @@ input[type=date]{width:100%;font-family:var(--disp);font-size:14.5px;color:var(-
 .ivmeta{font-family:var(--disp);font-size:13.5px}
 .ivres{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
 .ivq{font-style:italic;font-size:14px;color:var(--ink2);margin:6px 0 0}
+.gate{font-family:var(--disp);letter-spacing:0;text-transform:none;font-size:12.5px;color:var(--blue);margin-left:6px}
+.gate.ready{color:var(--ok);font-weight:600}
 .warn{font-family:var(--disp);font-size:13.5px;color:var(--accent);margin:4px 0}
 .okmsg{font-family:var(--disp);font-size:13.5px;color:var(--ok);margin:4px 0}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:12px 0;line-height:1.6}
@@ -351,7 +353,7 @@ const BOXES=[
 ];
 const BOX=Object.fromEntries(BOXES.map(b=>[b.id,b]));
 const STAGES={1:'Stage 1: customer and problem',2:'Stage 2: solution and money',3:'Stage 3: running and defending the business'};
-const STAGE_HINT={1:'Start here. Everything else depends on these answers.',2:'Open this stage once your stage 1 answers have some support.',3:'Open this stage once your stage 2 answers have some support.'};
+const STAGE_HINT={1:'Start here. Everything else depends on these answers.',2:'Answer these now if you can. Start testing them once every stage 1 answer for this business model is validated in step 06.',3:'Answer these now if you can. Start testing them once your revenue, channels and costs answers are backed by commitments, such as pre-orders, deposits or letters of intent.'};
 const EVID={leap:{label:'Leap of faith',w:3},anecdote:{label:'Anecdote',w:2},fact:{label:'Fact',w:1}};
 const STATUS={now:'Test now',later:"Can't test yet",supported:'Validated',refuted:'Refuted'};
 const ROLES={
@@ -498,8 +500,8 @@ function renderAnswers(){
   tabs.appendChild(nb);
   const m=S.apps.find(x=>x.id===S.active)||S.apps[0];const box=$('#model');box.innerHTML='';
   const head=document.createElement('div');head.className='modelhead';
-  head.innerHTML=`<span class="tag">BUSINESS MODEL ${appIndex(m.id)+1}</span>${S.apps.length>1?'<button type="button" class="linkbtn" data-act="delmodel">Delete this business model</button>':''}`;
-  box.appendChild(head);
+  head.innerHTML=`<span class="tag">BUSINESS MODEL ${appIndex(m.id)+1} <span id="gate" class="gate"></span></span>${S.apps.length>1?'<button type="button" class="linkbtn" data-act="delmodel">Delete this business model</button>':''}`;
+  box.appendChild(head);renderGate();
   const del=head.querySelector('[data-act=delmodel]');
   if(del)del.onclick=()=>{if(!confirm('Delete this business model and the answers only it uses?'))return;
     S.apps=S.apps.filter(x=>x.id!==m.id);S.assumptions=S.assumptions.filter(s=>{if(BOX[s.box].all)return true;s.apps=s.apps.filter(id=>id!==m.id);return s.apps.length;});
@@ -810,7 +812,14 @@ function renderOnePager(){
 }
 
 /* ---------- wiring ---------- */
-function renderComputed(){syncModels();renderOrder();renderHyps();renderPlanControls();renderPlan();renderLog();}
+function renderGate(){
+  const el=$('#gate');if(!el)return;const m=S.apps.find(x=>x.id===S.active);if(!m){el.textContent='';return;}
+  const list=S.assumptions.filter(s=>BOX[s.box].stage===1&&aText(s)&&(s.apps||[]).includes(m.id));
+  const done=list.filter(s=>effStatus(s)==='supported').length;
+  el.textContent=!list.length?'':done===list.length?'· Ready to test stage 2':`· Stage 1: ${done} of ${list.length} answers validated`;
+  el.classList.toggle('ready',!!list.length&&done===list.length);
+}
+function renderComputed(){syncModels();renderGate();renderOrder();renderHyps();renderPlanControls();renderPlan();renderLog();}
 function renderAll(){renderStart();renderAnswers();renderComputed();}
 $('#idea').addEventListener('input',e=>{S.idea=e.target.value;grow(e.target);save();renderPlan();});
 document.querySelectorAll('#start input').forEach(r=>r.addEventListener('change',()=>{S.start=r.value;save();renderStart();renderAnswers();renderComputed();}));
