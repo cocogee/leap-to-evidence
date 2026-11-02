@@ -277,7 +277,6 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
     <button class="primary" type="button" id="printOnePager" hidden>Print the advisor's one-pager</button>
     <button type="button" id="exportJson">Download my work</button>
     <button type="button" id="importJson">Load saved work</button>
-    <button type="button" id="exportCsv">Cards as spreadsheet</button>
     <button class="quiet" type="button" id="clearAll">Start over</button>
     <input type="file" id="fileIn" accept="application/json" hidden>
   </div>
@@ -304,6 +303,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <div class="toolbar">
     <button class="primary" type="button" id="ivSave">Save this interview</button>
     <button type="button" id="ivCsv">Interview log as spreadsheet</button>
+    <button type="button" id="exportCsv">Assumptions as spreadsheet</button>
     <button type="button" id="ivMerge">Add a teammate's interviews</button>
     <input type="file" id="mergeIn" accept="application/json" hidden>
   </div>
@@ -842,7 +842,7 @@ $('#exportCsv').onclick=()=>{
   const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const rows=ranked().map((x,i)=>{const s=x.s;
     return [i+1,BOX[s.box].name,BOX[s.box].all?'All':aps(s).map(id=>appLabel(S.apps[appIndex(id)]||{},appIndex(id))).join('; '),aText(s),EVID[s.evidence].label,x.c.label,x.r,STATUS[effStatus(s)],hypSentence(s.h),s.h.what,s.h.measure,s.h.context,s.h.falseIf].map(q).join(',');});
-  download('leap-to-evidence-cards.csv',[cols.map(q).join(','),...rows].join('\n'),'text/csv');toast('Downloaded.');};
+  download('leap-to-evidence-assumptions.csv',[cols.map(q).join(','),...rows].join('\n'),'text/csv');toast('Downloaded.');};
 $('#ivSave').onclick=()=>{
   const results={};document.querySelectorAll('#ivResults input:checked').forEach(r=>{results[r.name.slice(2)]=r.value;});
   const v={id:uid(),at:Date.now(),date:$('#ivDate').value||new Date().toISOString().slice(0,10),app:$('#ivApp').value,role:$('#ivRole').value,
