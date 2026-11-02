@@ -16,23 +16,11 @@
   --blue:#2E5A8F; --blue-soft:rgba(46,90,143,.10); --ok:#2F7D4F; --ok-soft:rgba(47,125,79,.10);
   --shadow:0 1px 3px rgba(19,41,75,.10);
   --field:rgba(19,41,75,.035); --thead:#EFF3F8;
+  color-scheme:light;
   --disp:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;
   --body:'IBM Plex Serif',Georgia,serif;
   --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ --paper:#0E1B30; --card:#16263F; --ink:#EAF0F7; --ink2:#93A5BD; --line:#2A3D59;
-    --gridline:rgba(234,240,247,.045); --accent:#FF6B3D; --accent-soft:rgba(255,107,61,.14);
-    --blue:#7EA3D6; --blue-soft:rgba(126,163,214,.14); --ok:#6CC08F; --ok-soft:rgba(108,192,143,.14);
-    --field:rgba(234,240,247,.06); --thead:rgba(234,240,247,.07);
-    --shadow:0 1px 3px rgba(0,0,0,.45); color-scheme:dark; }
-}
-:root[data-theme="dark"]{ --paper:#0E1B30; --card:#16263F; --ink:#EAF0F7; --ink2:#93A5BD; --line:#2A3D59;
-  --gridline:rgba(234,240,247,.045); --accent:#FF6B3D; --accent-soft:rgba(255,107,61,.14);
-  --blue:#7EA3D6; --blue-soft:rgba(126,163,214,.14); --ok:#6CC08F; --ok-soft:rgba(108,192,143,.14);
-  --field:rgba(234,240,247,.06); --thead:rgba(234,240,247,.07);
-  --shadow:0 1px 3px rgba(0,0,0,.45); color-scheme:dark; }
-
 *{box-sizing:border-box}
 [hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%}
