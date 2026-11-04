@@ -352,7 +352,7 @@ const KEY='leap-to-evidence-v1';
 /* Questions from the Lean Canvas and the Business Model Canvas, one per box, in dependency order.
    stage: when the question opens. order: what depends on what. gate: a yes/no condition judged in stage 1. */
 const BOXES=[
-  {id:'tech',stage:0,name:'Technology or product',order:0,gate:true,all:true,q:'What must your technology or product do reliably for customers to use it?',ph:'Read crumpled, handwritten supplier invoices correctly'},
+  {id:'tech',stage:0,name:'Technology or product',order:0,gate:true,all:true,q:'What must your technology or product reliably do for customers to use it?',ph:'Read crumpled, handwritten supplier invoices correctly'},
   {id:'segment',stage:1,name:'Customer',order:1,gate:true,q:'Who exactly has this problem?',ph:'Owners of independent coffee shops with 1 to 3 locations'},
   {id:'problem',stage:1,name:'Problem',order:1,gate:true,q:'What problem do they have?',ph:'Matching supplier invoices to deliveries by hand takes hours'},
   {id:'alternatives',stage:1,name:'Existing alternatives',order:2,q:'What do they do about the problem today?',ph:'Paper files, a spreadsheet, or their bookkeeper'},
@@ -532,7 +532,7 @@ function renderAnswers(){
     BOXES.filter(b=>b.stage===st).forEach(b=>{
       det.appendChild(questionBlock(b,m));
       if(b.id==='problem'){const f=document.createElement('div');f.className='field topic';
-        f.innerHTML=`<label>The everyday activity this problem is part of</label><textarea placeholder="paying suppliers"></textarea><p class="hint" style="margin:8px 0 0">Name the activity in the customer's terms, not as your problem. For example, "paying suppliers," not "matching invoices by hand." Interviews open with this activity.</p>`;
+        f.innerHTML=`<label>The job your customer is trying to get done</label><textarea placeholder="paying suppliers"></textarea><p class="hint" style="margin:8px 0 0">Name the job in the customer's terms, not as your problem. For example, "paying suppliers," not "matching invoices by hand." Write your best guess for now; interviews will sharpen it. Interviews open with this job.</p>`;
         const t=f.querySelector('textarea');t.value=m.topic||'';t.addEventListener('input',()=>{m.topic=t.value;grow(t);save();renderPlan();});det.appendChild(f);}
     });
     box.appendChild(det);
@@ -765,7 +765,7 @@ function renderPlan(){
     return;
   }
   const cards=S.plan.cards.map(id=>S.assumptions.find(s=>s.id===id)).filter(s=>s&&(s.h.what||'').trim()&&aps(s).includes(S.plan.app));
-  const topic=(app&&(app.topic||'').trim())||'[the everyday activity from step 02]';
+  const topic=(app&&(app.topic||'').trim())||'[the job from step 02]';
   const who=(app&&app.who.trim())||'(who has the problem: fill in step 01)';
   el.innerHTML=`${head('Interview plan')}
       <div class="meta">${esc(role.name)} · ${cards.length} hypothes${cards.length===1?'is':'es'} · stop after ${esc(S.stopN)} interviews from ${esc(S.stopK)}+ sources</div></div>
@@ -805,6 +805,7 @@ function renderPlan(){
     <ul><li>Log the interview in step 06: mark each hypothesis <b>supports</b>, <b>contradicts</b> or <b>no data</b>, and note the quote behind each mark.</li>
       <li>Send a thank-you message within a day. When you send the summary you promised, tell them one thing you learned from them.</li>
       <li>Write down anything you learned that your answers in step 02 don't cover, and add it there as a new answer.</li>
+      <li>If they described the job in different words, change the job in step 02 to their words.</li>
       <li>If an interview contradicts a hypothesis, revise the hypothesis or narrow who it covers. The count starts over at that revision.</li>
       <li>You have enough evidence to decide when a hypothesis lasts ${esc(S.stopN)} interviews in a row with ${esc(who.toLowerCase().startsWith('(')?'this customer':who.charAt(0).toLowerCase()+who.slice(1))}, in the role of ${esc(role.name.toLowerCase())}, from ${esc(S.stopK)}+ different sources, with no revision.</li></ul>`;
 }
