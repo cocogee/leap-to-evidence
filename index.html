@@ -106,7 +106,12 @@ textarea:disabled{opacity:.45}
 .hyp{margin:18px 0 6px;padding:14px 16px;border-radius:10px;background:var(--blue-soft)}
 .hyp .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
 .hyptext{margin:0;font-size:16px;line-height:1.6}
-.hyptext.pending{color:var(--ink2);font-style:italic;font-size:14.5px}
+.hyptext.pending{color:var(--ink2)}
+.why{list-style:disc;margin:10px 0 6px;padding-left:20px;font-size:14.5px;line-height:1.5;color:var(--ink2)}.why li{margin:4px 0}.whyh{font-family:var(--disp);font-size:13px;font-weight:600;margin:10px 0 0;color:var(--ink)}
+.based{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--disp);font-size:13.5px;font-weight:600;margin:0;max-width:100%}.based select{width:auto;max-width:100%;font-weight:400}.basedrule{margin:6px 0 0;font-size:13.5px}
+.vpdraft{margin:4px 0 22px;padding:16px;border:1px dashed var(--line);border-radius:10px}
+.albl{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin-bottom:4px}
+.example{margin:4px 0 0}.example summary{font-size:13.5px;color:var(--blue)}.example p{margin:8px 0 0}
 .bigcount{font-family:var(--disp);font-size:15px;color:var(--ink2);margin:4px 0 10px}
 .bigcount span{font-size:28px;font-weight:700;color:var(--ink);margin-right:6px}
 input[type=date]{width:100%;font-family:var(--disp);font-size:14.5px;color:var(--ink);background:var(--field);border:1px solid var(--line);padding:8px 12px;border-radius:8px}
@@ -136,7 +141,7 @@ input[type=date]{width:100%;font-family:var(--disp);font-size:14.5px;color:var(-
 .toast{font-family:var(--disp);font-size:13.5px;color:var(--accent);min-height:20px}
 /* testing order */
 .order{list-style:none;padding:0;margin:16px 0;display:grid;gap:14px}
-.order li{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:var(--card)}
+.order>li{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:var(--card)}
 .order .rank{font-family:var(--mono);font-size:13px;color:var(--accent);margin-right:6px}
 .order .text{font-size:15px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px}
@@ -228,7 +233,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
 <section class="card" id="s2">
   <h2><span class="n">02</span>List your assumptions</h2>
   <p class="lede">An assumption is anything your business needs to be true. Answer the questions below; each answer is an assumption, no matter how sure you feel about it.</p>
-  <p class="hint">Rate each answer honestly. <b>Leap of faith:</b> gut instinct. <b>Anecdote:</b> you heard it from a few people or saw it once. <b>Fact:</b> you have evidence of what many people actually did: many interviews describing the same past behavior, published research, sign-ups, usage data, or sales. No answer yet? Tick "I don't know yet." Interviews and market research will help you form one.</p>
+  <p class="hint">No answer yet? Tick "I don't know yet." Interviews and market research will help you form one.</p>
 
   <div id="techSection"></div>
 
@@ -356,7 +361,7 @@ const BOXES=[
   {id:'segment',stage:1,name:'Customer',order:1,gate:true,q:'Who exactly has this problem?',ph:'Owners of independent coffee shops with 1 to 3 locations'},
   {id:'problem',stage:1,name:'Problem',order:1,gate:true,q:'What problem do they have?',ph:'Matching supplier invoices to deliveries by hand takes hours'},
   {id:'alternatives',stage:1,name:'Existing alternatives',order:2,q:'What do they do about the problem today?',ph:'Paper files, a spreadsheet, or their bookkeeper'},
-  {id:'uvp',stage:1,name:'Value proposition',order:3,q:'Why would they choose you over what they do now?',ph:'It does the matching in seconds with no typing'},
+  {id:'uvp',stage:2,name:'Value proposition',order:3,q:'Why would they choose you over what they do now?',ph:'It does the matching in seconds with no typing'},
   {id:'solution',stage:2,name:'Solution',order:4,q:"What's the simplest version that would solve the problem?",ph:'A phone app that photographs the invoice and the delivery slip'},
   {id:'channels',stage:2,name:'Channels',order:5,q:'How will you reach them?',ph:'Through the suppliers who already deliver to them'},
   {id:'relationships',stage:2,name:'Customer relationships',order:5,q:'How will you keep customers coming back?',ph:'A weekly summary of mismatches and money saved'},
@@ -372,7 +377,7 @@ const BOXES=[
 const BOX=Object.fromEntries(BOXES.map(b=>[b.id,b]));
 const STAGES={1:'Stage 1: customer and problem',2:'Stage 2: solution and money',3:'Stage 3: running and defending the business'};
 const STAGE_HINT={1:'Start here. Everything else depends on these answers.',2:'Answer these now if you can. Start testing them once every stage 1 answer for this business model is validated in step 06.',3:'Answer these now if you can. Start testing them once your revenue, channels and costs answers are backed by commitments, such as pre-orders, deposits or letters of intent.'};
-const EVID={leap:{label:'Leap of faith',w:3},anecdote:{label:'Anecdote',w:2},fact:{label:'Fact',w:1}};
+const EVID={leap:{label:'Leap of faith',opt:'My hunch or reasoning (leap of faith)',w:3},anecdote:{label:'Anecdote',opt:'What a few people did, or my own experience (anecdote)',w:2},fact:{label:'Fact',opt:'Counted evidence of what many people did (fact)',w:1}};
 const STATUS={now:'Test now',later:"Can't test yet",supported:'Validated',refuted:'Refuted'};
 const ROLES={
   user:{name:'End user',hint:'The person who has the problem day to day. Best for: the problem, how they handle it now, how often it happens.'},
@@ -383,6 +388,8 @@ const ROLES={
   advisor:{name:'Advisor or coach (talk to first)',hint:'Best for: checking which of your assumptions are riskiest before you interview customers.'}
 };
 /* Boxes an interview cannot settle. */
+/* Interviews can support these answers; only a marketing test validates them. */
+const NEEDS_COMMITMENT={uvp:'Interviews can support a value proposition, but only a marketing test validates it.'};
 const NOT_BY_INTERVIEW={tech:'Whether the technology or product works is settled by a technical test, not an interview.',
   costs:'Costs are settled with supplier quotes and desk research.',
   rules:'Rules and approvals are settled with desk research and expert advice.',
@@ -470,11 +477,12 @@ function answerRow(s,m){
     :`<button type="button" class="linkbtn" data-act="share">Use in all business models</button>`);
   d.innerHTML=`<textarea data-k="text" placeholder="${esc(BOX[s.box].ph)}"></textarea>
     <div class="answerctl">
-      <select data-k="evidence" aria-label="Based on">${Object.entries(EVID).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select>
+      <label class="based">Based on <select data-k="evidence">${Object.entries(EVID).map(([k,v])=>{const lock=k==='fact'&&NEEDS_COMMITMENT[s.box]&&s.status!=='supported';return `<option value="${k}"${lock?' disabled':''}>${lock?'Counted evidence of what many people did (after a marketing test)':v.opt}</option>`;}).join('')}</select></label>
       <label class="check inline"><input type="checkbox" data-k="unknown"><span>I don't know yet</span></label>
       ${shareCtl}
       <button class="x small" type="button" title="Remove this answer">×</button>
-    </div>`;
+    </div>
+    <p class="hint basedrule">Pick the highest level you could show someone. Opinions, predictions, and research about a different group count as anecdotes.</p>`;
   const t=d.querySelector('textarea'),ev=d.querySelector('select'),un=d.querySelector('[data-k=unknown]');
   t.value=s.text;ev.value=s.evidence;un.checked=!!s.unknown;t.disabled=!!s.unknown;
   t.addEventListener('input',()=>{s.text=t.value;grow(t);save();renderComputed();});
@@ -502,6 +510,32 @@ function questionBlock(b,m){
     const ts=document.querySelectorAll(`[data-q="${b.id}"] textarea`);if(ts.length)ts[ts.length-1].focus();};
   d.dataset.q=b.id;
   return d;
+}
+/* Drafts a value proposition from the customer, problem and alternatives answers.
+   Template: Geoffrey Moore's positioning outline, as used in The Startup Owner's Manual (p.455). */
+function vpDrafter(m){
+  const v=m.vp||(m.vp={name:'',does:'',diff:''});
+  const clean=t=>{t=(t||'').trim().replace(/[.\s]+$/,'');return t?t.charAt(0).toLowerCase()+t.slice(1):'';};
+  const f=document.createElement('div');f.className='field vpdraft';
+  f.innerHTML=`<p class="whyh" style="margin-top:0">Draft it from your answers</p>
+    <p class="hint" style="margin:4px 0 10px">Your value proposition comes from your number-one problem and why their current alternatives fall short. Fill in the blanks; the tool adds your other answers.</p>
+    <div class="row">
+      <div class="field"><label>Your product's name</label><textarea data-k="name"></textarea></div>
+      <div class="field"><label>What does it do for them?</label><textarea data-k="does"></textarea></div>
+    </div>
+    <div class="field"><label>What makes it different from what they do now?</label><textarea data-k="diff"></textarea></div>
+    <div class="hyp"><span class="lbl">Your draft</span><p class="hyptext"></p></div>
+    <button type="button" class="add" data-act="usevp">Use this draft as my answer</button>`;
+  const out=f.querySelector('.hyptext');
+  const draft=()=>{const b=k=>clean(v[k])||'___';
+    return `For ${clean(firstAnswer(m,'segment'))||'[your customer]'} who ${clean(firstAnswer(m,'problem'))||'[your problem]'}, ${(v.name||'').trim()||'[your product]'} ${b('does')}. Unlike ${clean(firstAnswer(m,'alternatives'))||'[what they do now]'}, it ${b('diff')}.`;};
+  const refresh=()=>{out.textContent=draft();out.classList.toggle('pending',/___|\[your|\[what/.test(out.textContent));};
+  f.querySelectorAll('[data-k]').forEach(el=>{el.value=v[el.dataset.k]||'';el.addEventListener('input',()=>{v[el.dataset.k]=el.value;grow(el);save();refresh();});});
+  f.querySelector('[data-act=usevp]').onclick=()=>{
+    let s=S.assumptions.find(x=>x.box==='uvp'&&(x.apps||[]).includes(m.id)&&!x.text.trim());
+    if(!s){s=newAssumption();s.box='uvp';s.apps=[m.id];S.assumptions.push(s);}
+    s.text=draft();s.unknown=false;save();renderAnswers();renderComputed();toast('Draft added as a value proposition answer. Edit it there.');};
+  refresh();return f;
 }
 function renderAnswers(){
   const showTech=S.start==='tech'||S.start==='product'||S.assumptions.some(s=>s.box==='tech'&&aText(s));
@@ -531,6 +565,7 @@ function renderAnswers(){
     det.addEventListener('toggle',()=>{opened[st]=det.open;save();});
     BOXES.filter(b=>b.stage===st).forEach(b=>{
       det.appendChild(questionBlock(b,m));
+      if(b.id==='uvp')det.appendChild(vpDrafter(m));
       if(b.id==='problem'){const f=document.createElement('div');f.className='field topic';
         f.innerHTML=`<label>The job your customer is trying to get done</label><textarea placeholder="paying suppliers"></textarea><p class="hint" style="margin:8px 0 0">Name the job in the customer's terms, not as your problem. For example, "paying suppliers," not "matching invoices by hand." Write your best guess for now; interviews will sharpen it. Interviews open with this job.</p>`;
         const t=f.querySelector('textarea');t.value=m.topic||'';t.addEventListener('input',()=>{m.topic=t.value;grow(t);save();renderPlan();});det.appendChild(f);}
@@ -553,12 +588,24 @@ function consequence(s){
     if(!free.length)return {key:'stop',label:'Stop',why:liveApps().length>1?'Every business model you listed depends on this assumption.':"You've listed only one business model, so there's nothing to pivot to yet.",w:3};
     return {key:'pivot',label:'Pivot',why:`Still open if this is false: ${free.map(a=>appShort(a,appIndex(a.id))).join('; ')}.`,w:2};
   }
+  if(s.box==='uvp')return {key:'pivot',label:'Pivot',why:'If false, rewrite the value proposition for the same customer and problem.',w:2};
   if(b.stage===1)return {key:'pivot',label:'Pivot',why:'If false, this business model needs a different value proposition for the same customer.',w:2};
   return {key:'later',label:'Judged later',why:'Money and delivery assumptions are judged with a money model once the customer and problem assumptions have support.',w:1};
 }
-function reach(s){return S.assumptions.filter(o=>o!==s&&aText(o)&&sameChain(s,o)&&BOX[o.box].order>BOX[s.box].order).length;}
+function dependents(s){return S.assumptions.filter(o=>o!==s&&aText(o)&&sameChain(s,o)&&BOX[o.box].order>BOX[s.box].order);}
+function reach(s){return dependents(s).length;}
+/* Plain-language reasons for a card's place in the order. */
+const EVID_WHY={leap:"It's based on your hunch or reasoning (a leap of faith).",anecdote:"It's based on what a few people did, or your own experience (an anecdote).",fact:"It's based on counted evidence of what many people did (a fact), so it can wait behind less certain answers."};
+function whyLines(x){
+  const s=x.s,c=x.c,short=t=>t.length>60?t.slice(0,57).trim()+'...':t;
+  const lead={stop:"If it's wrong, the business stops.",pivot:"If it's wrong, you'd pivot."}[c.key];
+  const deps=dependents(s);
+  return [lead?`${lead} ${c.why}`:c.why,
+    deps.length?`${deps.length} of your other answers rest${deps.length===1?'s':''} on it: ${deps.map(o=>'"'+short(aText(o))+'"').join(', ')}.`:'No other answers rest on it yet.',
+    EVID_WHY[s.evidence]];
+}
 function blocker(s){
-  return S.assumptions.find(o=>o!==s&&aText(o)&&o.box!=='tech'&&sameChain(s,o)&&BOX[o.box].order<BOX[s.box].order&&o.evidence==='leap'&&effStatus(o)!=='supported'&&effStatus(o)!=='refuted');
+  return S.assumptions.find(o=>o!==s&&aText(o)&&o.box!=='tech'&&sameChain(s,o)&&BOX[o.box].order<BOX[s.box].order&&o.evidence==='leap'&&effStatus(o)!=='supported'&&effStatus(o)!=='refuted'&&!ivSupported(o));
 }
 function ranked(){
   return S.assumptions.filter(s=>aText(s)).map(s=>{
@@ -575,20 +622,21 @@ function renderOrder(){
   list.forEach((x,i)=>{
     const s=x.s,li=document.createElement('li');
     const st=effStatus(s),ev=NOT_BY_INTERVIEW[s.box]?null:evidence(s),done=st==='supported'||st==='refuted';
-    li.innerHTML=`<div><span class="rank">${i+1}.</span><span class="text">${esc(aText(s))}</span></div>
-      <div class="chips"><span class="chip">${BOX[s.box].name}</span>
-        <span class="chip ${x.c.key}" title="${esc(x.c.why)}">If false: ${x.c.label}</span>
-        <span class="chip">Dependencies: ${x.r}</span>
-        <span class="chip ${s.evidence==='leap'?'leap':''}">${EVID[s.evidence].label}</span>
-        ${done?`<span class="chip done">${STATUS[st]}</span>`:ev?`<span class="chip ${ev.key==='contradicted'?'stop':'pivot'}">${esc(ev.label)}</span>`:''}</div>
-      <div class="hint" style="margin:0">${esc(x.c.why)}</div>
+    li.innerHTML=`<span class="albl">${BOX[s.box].name}</span><div><span class="rank">${i+1}.</span><span class="text">${esc(aText(s))}</span></div>
+      ${done?`<div class="chips"><span class="chip done">${STATUS[st]}</span></div>`:ev?`<div class="chips"><span class="chip ${ev.key==='contradicted'?'stop':'pivot'}">${esc(ev.label)}</span></div>`:''}
+      <p class="whyh">Why it's ${i===0?'first':'here'}:</p>
+      <ul class="why">${whyLines(x).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
       ${x.bl&&st==='now'?`<p class="waiting">Waiting for an earlier assumption: "${esc(aText(x.bl))}" is still a leap of faith. Test that assumption first.</p>`:''}
       ${NOT_BY_INTERVIEW[s.box]?`<p class="waiting">${NOT_BY_INTERVIEW[s.box]}</p>`:''}
-      <div class="controls"><select>${Object.entries(STATUS).filter(([k])=>NOT_BY_INTERVIEW[s.box]||k==='now'||k==='later').map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+      ${NEEDS_COMMITMENT[s.box]&&st!=='supported'?`<p class="waiting">${NEEDS_COMMITMENT[s.box]}</p>`:''}
+      <div class="controls"><select>${Object.entries(STATUS).filter(([k])=>NOT_BY_INTERVIEW[s.box]||k==='now'||k==='later'||(NEEDS_COMMITMENT[s.box]&&k==='supported')).map(([k,v])=>`<option value="${k}">${NEEDS_COMMITMENT[s.box]&&k==='supported'?'Validated by a marketing test':v}</option>`).join('')}</select>
         <input type="text" placeholder="What would make it testable?" ${s.status==='later'?'':'hidden'}></div>`;
     const sel=li.querySelector('select'),inp=li.querySelector('input');
-    sel.value=NOT_BY_INTERVIEW[s.box]?s.status:(s.status==='later'?'later':'now');inp.value=s.trigger;if(st==='supported'&&!NOT_BY_INTERVIEW[s.box])li.querySelector('.controls').hidden=true;
-    sel.onchange=()=>{s.status=sel.value;save();renderComputed();};
+    sel.value=NOT_BY_INTERVIEW[s.box]?s.status:NEEDS_COMMITMENT[s.box]&&s.status==='supported'?'supported':(s.status==='later'?'later':'now');inp.value=s.trigger;if(st==='supported'&&!NOT_BY_INTERVIEW[s.box])li.querySelector('.controls').hidden=true;
+    sel.onchange=()=>{s.status=sel.value;
+      /* A value proposition becomes a fact only through a marketing test. */
+      if(NEEDS_COMMITMENT[s.box]){if(s.status==='supported')s.evidence='fact';else if(s.evidence==='fact')s.evidence='anecdote';renderAnswers();}
+      save();renderComputed();};
     inp.oninput=()=>{s.trigger=inp.value;save();};
     ol.appendChild(li);
   });
@@ -596,6 +644,16 @@ function renderOrder(){
 
 /* ---------- 4. hypotheses ---------- */
 const FEELING=/\b(would|will|want|wants|like|likes|love|interested|frustrat\w*|hate|hates|need|needs|prefer\w*|feel|feels|think|thinks)\b/i;
+/* "What they do" asks for a behavior that fits the box. */
+const WHAT_Q={segment:"What do they do that shows they're your customer?",problem:'What do they do because of the problem?',alternatives:'What do they do about the problem now?',
+  uvp:'What have they already done to get what you offer?',solution:'What have they already done to solve the problem themselves?',channels:'How do they find products like yours today?',
+  revenue:'What do they already pay for to solve this problem?'};
+/* Shows the sentence as it fills in, with blanks for missing answers. */
+function hypDraft(h){
+  const f=k=>(h[k]||'').trim().replace(/[.\s]+$/,'')||'___';
+  const t=`${f('who')} ${f('what')} ${f('measure')}, ${f('context')}.`;
+  return t.charAt(0).toUpperCase()+t.slice(1);
+}
 /* The tool writes the hypothesis from the four answers. */
 function hypSentence(h){
   const what=(h.what||'').trim().replace(/[.\s]+$/,'');if(!what)return '';
@@ -618,24 +676,27 @@ function renderHyps(){
   if(!list.length){box.innerHTML='<p class="hint">Assumptions marked "Test now" appear here, in testing order.</p>';return;}
   list.forEach((x,i)=>{
     const s=x.s,h=s.h;const app=S.apps.find(a=>aps(s).includes(a.id));
-    if(!h.who&&app&&app.who)h.who=app.who;
+    if(!h.who)h.who=s.box==='segment'?s.text.trim():(app&&app.who)||'';
     const d=document.createElement('details');d.className='item';if(i===0)d.open=true;
-    d.innerHTML=`<summary>${esc(aText(s))}</summary>
+    d.innerHTML=`<summary><span class="albl">Your assumption</span>${esc(aText(s))}</summary>
+      <p class="hint">Rewrite this assumption as something these people do that you could hear about in an interview. Fill in the blanks:</p>
+      <div class="field"><label>Who, exactly?</label><textarea data-k="who"></textarea></div>
+      <div class="field"><label>${esc(WHAT_Q[s.box]||'What do they do?')}</label><textarea data-k="what"></textarea></div>
       <div class="row">
-        <div class="field"><label>Who, exactly</label><textarea data-k="who"></textarea></div>
-        <div class="field"><label>What they do</label><textarea data-k="what" placeholder="match supplier invoices to deliveries by hand"></textarea></div>
+        <div class="field"><label>How much or how often?</label><textarea data-k="measure"></textarea></div>
+        <div class="field"><label>When or where?</label><textarea data-k="context"></textarea></div>
       </div>
-      <div class="row">
-        <div class="field"><label>How much or how often</label><textarea data-k="measure" placeholder="for 2 or more hours a week"></textarea></div>
-        <div class="field"><label>When or where</label><textarea data-k="context" placeholder="at the end of each week"></textarea></div>
-      </div>
-      <p class="hint" style="margin:0">For "What they do," write an action they already take, so it fits "they ___."</p>
+      <p class="hint" style="margin:0">Write an action they already take, not a trait or a feeling.</p>
+      <details class="example"><summary>See an example</summary>
+        <p class="hint">Who, exactly? <b>Owners of independent coffee shops with 1 to 3 locations</b><br>What do they do because of the problem? <b>match supplier invoices to deliveries by hand</b><br>How much or how often? <b>for 2 or more hours a week</b><br>When or where? <b>at the end of each week</b></p>
+        <p class="hint">Hypothesis: "Owners of independent coffee shops with 1 to 3 locations match supplier invoices to deliveries by hand for 2 or more hours a week, at the end of each week."</p>
+      </details>
       <div class="hyp"><span class="lbl">Your hypothesis</span><p class="hyptext"></p></div>
       <div class="field"><label>What would you hear if the hypothesis is false?</label><textarea data-k="falseIf" placeholder="Someone else does it for them, or it takes a few minutes."></textarea></div>
       <label class="check"><input type="checkbox" data-k="crux"><span>A single interview can prove this hypothesis wrong.</span></label>
       <div class="msgs"></div>`;
     const msgs=d.querySelector('.msgs'),out=d.querySelector('.hyptext');
-    const refresh=()=>{const t=hypSentence(h);out.textContent=t||'Answer the four questions above.';out.classList.toggle('pending',!t);
+    const refresh=()=>{const t=hypSentence(h);out.textContent=hypDraft(h);out.classList.toggle('pending',!t||/___/.test(out.textContent));
       const w=hypWarnings(h),ev=evidence(s);
       let st='';
       if(ev&&ev.key==='contradicted')st=`<p class="warn">An interview contradicted this hypothesis. Revise it or narrow who it covers, then start a new count. <button type="button" class="linkbtn" data-act="recount">Start a new count</button></p>`;
@@ -661,9 +722,11 @@ function evidence(s){
   let best=null;Object.entries(byRole).forEach(([r,l])=>{const n=l.length,k=new Set(l.map(v=>(v.source||'').trim().toLowerCase()).filter(Boolean)).size;
     if(!best||n>best.n||(n===best.n&&k>best.k))best={r,n,k};});
   const rn=ROLES[best.r]?ROLES[best.r].name.toLowerCase():best.r;
+  if(best.n>=S.stopN&&best.k>=S.stopK&&NEEDS_COMMITMENT[s.box])return {key:'ivsupported',label:`Supported by interviews (${best.n} with ${rn}s from ${best.k} sources); needs a marketing test to validate`};
   if(best.n>=S.stopN&&best.k>=S.stopK)return {key:'validated',label:`Validated: ${best.n} interviews with ${rn}s from ${best.k} sources`};
   return {key:'testing',label:`Testing: ${best.n} of ${S.stopN} interviews, ${best.k} of ${S.stopK} sources (${rn}s)`};
 }
+function ivSupported(s){const ev=NEEDS_COMMITMENT[s.box]&&evidence(s);return !!ev&&ev.key==='ivsupported';}
 function effStatus(s){
   if(!NOT_BY_INTERVIEW[s.box]){const ev=evidence(s);if(ev&&ev.key==='validated')return 'supported';}
   return s.status;
@@ -781,7 +844,9 @@ function renderPlan(){
       <li class="listen">Get their yes on the recording itself.</li></ol>
     <h2>Start broad</h2>
     <ol><li class="say">"To start, can you walk me through how you handle ${esc(topic)}, from start to finish?"</li>
-      <li class="listen">Let them talk without interrupting. Note anything surprising; a surprise can point to an assumption you haven't listed.</li></ol>
+      <li class="listen">Let them talk without interrupting. Note anything surprising; a surprise can point to an assumption you haven't listed.</li>
+      <li class="listen">Listen for how they want to feel while doing this job, and how they want others to see them. People rarely say it outright; it shows up in the moments they pick to tell you about and the words they use.</li>
+      <li class="say">"What was that like for you?" <span class="listen">(Ask after they describe a specific moment.)</span></li></ol>
     ${cards.length?(seen=>cards.map((s,i)=>`<h2>Hypothesis ${i+1}</h2>
       <p class="listen">${esc(hypSentence(s.h)||aText(s))}</p>
       <ol>${cardQuestions(s).filter(q=>!seen.has(q)&&seen.add(q)).map(q=>`<li class="say">"${esc(q)}"</li>`).join('')}</ol>
@@ -840,7 +905,7 @@ function renderOnePager(){
 function renderGate(){
   const el=$('#gate');if(!el)return;const m=S.apps.find(x=>x.id===S.active);if(!m){el.textContent='';return;}
   const list=S.assumptions.filter(s=>BOX[s.box].stage===1&&aText(s)&&(s.apps||[]).includes(m.id));
-  const done=list.filter(s=>effStatus(s)==='supported').length;
+  const done=list.filter(s=>effStatus(s)==='supported'||ivSupported(s)).length;
   el.textContent=!list.length?'':done===list.length?'· Ready to test stage 2':`· Stage 1: ${done} of ${list.length} answers validated`;
   el.classList.toggle('ready',!!list.length&&done===list.length);
 }
