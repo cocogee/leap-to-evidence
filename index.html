@@ -245,7 +245,7 @@ footer{margin-top:40px;font-size:13.5px;color:var(--ink2);max-width:72ch}
   <p class="lede">Calculated from your answers, not from how important things feel.</p>
   <details><summary>How the order is calculated</summary>
     <p class="hint"><b>Consequence.</b> If a technology assumption fails, every business model fails: <b>Stop</b>. If a customer or problem assumption fails, the tool checks your other business models. If at least one doesn't depend on it: <b>Pivot</b>. If all of them do: <b>Stop</b>. Money assumptions (price, channels, costs) are judged with a money model in stage 2.</p>
-    <p class="hint"><b>Reach.</b> How many of your other assumptions depend on this one. On the canvas, later boxes depend on earlier ones: problems belong to a customer, prices depend on the problem, channels depend on who the customer is.</p>
+    <p class="hint"><b>Dependencies.</b> How many of your other assumptions depend on this one. On the canvas, later boxes depend on earlier ones: problems belong to a customer, prices depend on the problem, channels depend on who the customer is.</p>
     <p class="hint"><b>Evidence.</b> Leap-of-faith assumptions go before anecdotes; facts go last.</p>
     <p class="hint"><b>Earlier links first.</b> If an earlier assumption is still a leap of faith, a "no" on a later assumption could mean only that the earlier assumption was wrong, so the later assumption waits. Customer and problem assumptions are tested together, and technology tests run alongside interviews.</p>
   </details>
@@ -578,7 +578,7 @@ function renderOrder(){
     li.innerHTML=`<div><span class="rank">${i+1}.</span><span class="text">${esc(aText(s))}</span></div>
       <div class="chips"><span class="chip">${BOX[s.box].name}</span>
         <span class="chip ${x.c.key}" title="${esc(x.c.why)}">If false: ${x.c.label}</span>
-        <span class="chip">Reach: ${x.r}</span>
+        <span class="chip">Dependencies: ${x.r}</span>
         <span class="chip ${s.evidence==='leap'?'leap':''}">${EVID[s.evidence].label}</span>
         ${done?`<span class="chip done">${STATUS[st]}</span>`:ev?`<span class="chip ${ev.key==='contradicted'?'stop':'pivot'}">${esc(ev.label)}</span>`:''}</div>
       <div class="hint" style="margin:0">${esc(x.c.why)}</div>
@@ -861,7 +861,7 @@ $('#fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new Fil
   r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.apps))throw 0;S=migrate(Object.assign(blank(),d));save();renderAll();toast('Loaded.');}catch(err){toast("That file doesn't look like saved work from this tool.");}};
   r.readAsText(f);e.target.value='';};
 $('#exportCsv').onclick=()=>{
-  const cols=['Rank','Box','Business models','Assumption','Based on','If false','Reach','Status','Hypothesis','What they do','How much/often','When/where','Counts against it'];
+  const cols=['Rank','Box','Business models','Assumption','Based on','If false','Dependencies','Status','Hypothesis','What they do','How much/often','When/where','Counts against it'];
   const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const rows=ranked().map((x,i)=>{const s=x.s;
     return [i+1,BOX[s.box].name,BOX[s.box].all?'All':aps(s).map(id=>appLabel(S.apps[appIndex(id)]||{},appIndex(id))).join('; '),aText(s),EVID[s.evidence].label,x.c.label,x.r,STATUS[effStatus(s)],hypSentence(s.h),s.h.what,s.h.measure,s.h.context,s.h.falseIf].map(q).join(',');});
